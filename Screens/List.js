@@ -7,14 +7,15 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 
 function fetchData() {
   //Use Firebase call in this function
   return [
-    { id: 1, name: 'pizza', description:"jsafl;jaf;ldkja;ldf", rank: '1' },
-    { id: 2, name: 'soup', description:"jsafl;jaf;ldkja;ldf", rank: '-1' },
-    { id: 2, name: 'cocoa', description:"jsafl;jaf;ldkja;ldf", rank: '-1' },
-    { id: 2, name: 'ice cream', description:"jsafl;jaf;ldkja;ldf", rank: '-1' },
+    { id: 1, name: 'First Sample Item', description:"", rank: '1' },
+    { id: 2, name: 'Second Sample Item', description:"", rank: '2' },
+    { id: 3, name: 'Third Sample Item', description:"", rank: '3' },
+    { id: 4, name: 'Fourth Sample Item', description:"", rank: '4' },
   ];
 }
 
@@ -35,9 +36,14 @@ function renderItem({ item }) {
   );
 }
 
-export default function List() {
+
+export default function List({navigation, route}) {
+  const id = route.params.id;
+  
   return (
+    
     <SafeAreaView>
+      <Text style={styles.title}>You are on the {JSON.stringify(id).replace(/['"]+/g, '')}page</Text>
       <FlatList
         data={fetchData()}
         renderItem={renderItem}
@@ -63,6 +69,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   title: {
-    fontSize: 32,
+    textAlign: 'center',
+    fontSize: 20,
   },
 });
