@@ -6,8 +6,9 @@ import {
   View,
   FlatList,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useLinkProps } from '@react-navigation/native';
 
 function fetchData() {
   //Use Firebase call in this function
@@ -19,26 +20,27 @@ function fetchData() {
   ];
 }
 
-function renderItem({ item }) {
-  return (
-    <View style={styles.item}>
-      <Image
-        style={styles.image}
-        source={require('../assets/favicon.png')}
-      />
-      <View>
-        <Text> {item.name} </Text>
-        <Text> {item.description} </Text>
-      </View> 
-
-
-    </View>
-  );
-}
 
 
 export default function List({navigation, route}) {
   const id = route.params.id;
+
+  function renderItem({ item }) {
+    return (
+      <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost')}>
+        <View style={styles.item}>
+          <Image
+            style={styles.image}
+            source={require('../assets/favicon.png')}
+          />
+          <View>
+            <Text> {item.name} </Text>
+            <Text> {item.description} </Text>
+          </View> 
+        </View>
+      </TouchableOpacity>
+    );
+  }
   
   return (
     

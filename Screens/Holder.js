@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ListScreen from './List';
 import Home from "./Home"
+import ViewPostScreen from "./ViewPost";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function Holder(){
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="FoodList" component={ListScreen} />
+      <Stack.Screen name="ViewPost" component={ViewPostScreen} />
     </Stack.Navigator>
     )
 }

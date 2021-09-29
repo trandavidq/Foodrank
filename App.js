@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Holder from "./Screens/Holder"
 import Home from "./Screens/Home"
 import List from "./Screens/List"
-import Post from "./Screens/Post"
+import CreatePost from "./Screens/CreatePost"
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -16,7 +16,7 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Holder" component={Holder} />
-        <Tab.Screen name="Post" component={Post} />
+        <Tab.Screen name="CreatePost" component={CreatePost} />
       </Tab.Navigator>
     </NavigationContainer>
   );

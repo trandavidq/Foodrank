@@ -27,13 +27,6 @@ function fetchData() {
 
 export default function Home(props) {
 
-  function stacknav(){
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="FoodList" component={ListScreen} />
-      </Stack.Navigator>
-    );
-  }
 
   function renderItem({ item }) {
     //console.log(props.navigation)
