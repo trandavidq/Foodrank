@@ -9,6 +9,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import ListScreen from './List';
+
+const Stack = createStackNavigator();
 
 function fetchData() {
   //Use Firebase call in this function
@@ -23,6 +27,14 @@ function fetchData() {
 
 export default function Home(props) {
 
+  function stacknav(){
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name="FoodList" component={ListScreen} />
+      </Stack.Navigator>
+    );
+  }
+
   function renderItem({ item }) {
     //console.log(props.navigation)
     return (
@@ -34,7 +46,6 @@ export default function Home(props) {
           source={require('../assets/favicon.png')}
         />
         <View>
-          
           <Text> {item.name} </Text>
           <Text> {item.description} </Text>
         </View> 
@@ -50,7 +61,7 @@ export default function Home(props) {
       <FlatList
         data={fetchData()}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </SafeAreaView>
   );
