@@ -7,8 +7,9 @@ import StackNavHolder from "./Screens/StackNavHolder"
 import Home from "./Screens/Home"
 import List from "./Screens/List"
 import CreatePost from "./Screens/CreatePost"
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const Stack = createStackNavigator();
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -17,6 +18,26 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen name="Food Categories" component={StackNavHolder} />
         <Tab.Screen name="CreatePost" component={CreatePost} />
+        <Tab.Screen 
+        name="Foodrank" 
+        component={Holder}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+        }}
+        
+        />
+        <Tab.Screen 
+        name="CreatePost" 
+        component={CreatePost} 
+        options={{
+          tabBarLabel: 'CreatePost',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="post" color={color} size={26} />
+          ),
+        }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );
