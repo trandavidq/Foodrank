@@ -16,13 +16,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Food Categories" component={StackNavHolder} />
-        <Tab.Screen name="CreatePost" component={CreatePost} />
         <Tab.Screen 
         name="Foodrank" 
-        component={Holder}
+        component={StackNavHolder}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Categories',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />
           ),
