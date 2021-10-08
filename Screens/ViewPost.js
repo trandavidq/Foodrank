@@ -6,18 +6,50 @@ import {
   View,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
 
+function fetchData() {
+    //Use Firebase call in this function
+    return [
+      { id: 1, title: 'Post-title1' , description:"ahfduiagojdnfGAJIDBNSIGBGJBAFJBGFJAGBJDBIAGJBJIGDBJGABGJDBAGBDFSGBDFSGBUFBGURNSGBNUTBRUBJFZDBFUSJ" }
+    ];
+  }
 export default function ViewPost(){
-    return (
-        <View>
-            <Text>
-                This is the view post screen!
-            </Text>
-        </View>
-    )
+
+        function renderPost({ item }) {
+            return (
+              <View>
+                <View>
+                  <Text style={styles.title}> {item.title} </Text>
+                  <Text style={styles.description}> {item.description} </Text>
+                </View> 
+              </View>
+
+            );
+          }
+          return (
+            <SafeAreaView>
+              <FlatList
+                data={fetchData()}
+                renderItem={renderPost}
+                keyExtractor={(item) => item.id.toString()}
+              />
+            </SafeAreaView>
+          );
+    
 }
+const styles = StyleSheet.create({
+    description: {
+        textAlign: 'center',
+        fontSize: 20,
+      },
+    image: {
+      width: 100,
+      height: 100,
+    },
+    title: {
+      textAlign: 'center',
+      fontSize: 20,
+    },
+  });
