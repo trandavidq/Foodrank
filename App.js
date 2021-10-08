@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import Holder from "./Screens/Holder"
+import StackNavHolder from "./Screens/StackNavHolder"
 import Home from "./Screens/Home"
 import List from "./Screens/List"
 import CreatePost from "./Screens/CreatePost"
@@ -18,9 +18,9 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen 
         name="Foodrank" 
-        component={Holder}
+        component={StackNavHolder}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Categories',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />
           ),
