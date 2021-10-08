@@ -9,35 +9,37 @@ import {
 } from 'react-native';
 
 
-function fetchData() {
+
+export default function ViewPost({navigation,route}){
+  
+  const title = JSON.stringify(route.params.title);
+  function fetchData() {
     //Use Firebase call in this function
     return [
-      { id: 1, title: 'Post-title1' , description:"ahfduiagojdnfGAJIDBNSIGBGJBAFJBGFJAGBJDBIAGJBJIGDBJGABGJDBAGBDFSGBDFSGBUFBGURNSGBNUTBRUBJFZDBFUSJ" }
+      { id: 1, title: title, description:"ahfduiagojdnfGAJIDBNSIGBGJBAFJBGFJAGBJDBIAGJBJIGDBJGABGJDBAGBDFSGBDFSGBUFBGURNSGBNUTBRUBJFZDBFUSJ" }
     ];
   }
-export default function ViewPost(){
+  function renderPost({ item }) {
+      return (
+        <View>
+          <View>
+            <Text style={styles.title}> {item.title} </Text>
+            <Text style={styles.description}> {item.description} </Text>
+          </View> 
+        </View>
 
-        function renderPost({ item }) {
-            return (
-              <View>
-                <View>
-                  <Text style={styles.title}> {item.title} </Text>
-                  <Text style={styles.description}> {item.description} </Text>
-                </View> 
-              </View>
+      );
+    }
+    return (
+      <SafeAreaView>
+        <FlatList
+          data={fetchData()}
+          renderItem={renderPost}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </SafeAreaView>
+    );
 
-            );
-          }
-          return (
-            <SafeAreaView>
-              <FlatList
-                data={fetchData()}
-                renderItem={renderPost}
-                keyExtractor={(item) => item.id.toString()}
-              />
-            </SafeAreaView>
-          );
-    
 }
 const styles = StyleSheet.create({
     description: {
@@ -51,5 +53,7 @@ const styles = StyleSheet.create({
     title: {
       textAlign: 'center',
       fontSize: 20,
+      fontWeight: "bold",
+      paddingBottom: 35,
     },
   });

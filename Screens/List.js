@@ -27,7 +27,7 @@ export default function List({navigation, route}) {
 
   function renderItem({ item }) {
     return (
-      <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost')}>
+      <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost',{title: item.name})}>
         <View style={styles.item}>
           <Image
             style={styles.image}
