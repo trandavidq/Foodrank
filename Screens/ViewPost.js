@@ -10,7 +10,7 @@ import {
 
 
 
-export default function ViewPost({navigation,route}){
+export default function ViewPost({navigation,route}) {
   
   const title = JSON.stringify(route.params.title);
   function fetchData() {
