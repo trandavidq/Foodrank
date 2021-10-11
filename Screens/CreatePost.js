@@ -23,7 +23,7 @@ export default function Post() {
         </Text>
     </View>
   );
-}
+} 
 
 const styles = StyleSheet.create({
   item: {

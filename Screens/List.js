@@ -49,7 +49,7 @@ export default function List({navigation, route}) {
       <FlatList
         data={fetchData()}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </SafeAreaView>
   );

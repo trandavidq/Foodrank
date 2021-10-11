@@ -28,7 +28,7 @@ function fetchData() {
 export default function Home(props) {
 
 
-  function renderItem({ item }) {
+  function renderItem({ item }) { 
     //console.log(props.navigation)
     return (
       <TouchableOpacity onPress= {() => props.navigation.navigate('FoodList', { id : item.name})}>

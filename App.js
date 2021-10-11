@@ -16,6 +16,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
+        
         <Tab.Screen 
         name="Foodrank" 
         component={StackNavHolder}
@@ -24,9 +25,8 @@ export default function App() {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />
           ),
-        }}
-        
-        />
+        }}/>
+
         <Tab.Screen 
         name="CreatePost" 
         component={CreatePost} 
