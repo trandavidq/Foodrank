@@ -1,40 +1,56 @@
 import React from 'react';
-// Upvote/Downvote referenced from StackOverflow
+import {
+    Text,
+    View, StyleSheet
+  } from 'react-native';
+  import { Entypo } from '@expo/vector-icons'; 
+
 class Upvote extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            count: 0,
-            addend: 0 // either 1, 0, or -1
+            upVote: 0,
+            downVote: 0
         }
     }
 
-    toggleIncrement = () => {
-        this.setState(prevState => ({
-            addend: prevState.addend === 1 ? 0 : 1
-        }))
-    }
-
+    incrementCount = () => {
+        this.setState({upVote: this.state.upVote + 1});
+      }
     toggleDecrement = () => {
-
-        this.setState(prevState => ({
-            addend: prevState.addend === -1 ? 0 : -1
-        }))
+        this.setState({downVote: this.state.downVote + 1});
     }
 
     render() {
         return (
-            <div>
-                <button onClick={this.toggleIncrement}>
-                    +
-                </button>
-                <span>{this.state.count + this.state.addend}</span>
-                <button onClick={this.toggleDecrement}>
-                    -
-                </button>
-            </div>
+            <View style={styles.contain}>
+            <View style={styles.text}>
+                <Entypo 
+                name="arrow-bold-up"
+                size={50} color="green"
+                onPress={this.incrementCount}/>
+                <Text>{this.state.upVote}</Text>
+                <Entypo 
+                name="arrow-bold-down"
+                size={50} color="red"
+                onPress={this.toggleDecrement}/>
+                <Text>{this.state.downVote}</Text>
+            </View>
+            </View>
         );
     }
 }
+const styles = StyleSheet.create({
+    text: {
+        display: 'flex',
+        flexDirection: "row", 
+        justifyContent:"flex-start",
+    },
+    contain:{
+        position: "absolute",
+        bottom: 0,
+        right: 50
+    }
+})
 
 export default Upvote;
