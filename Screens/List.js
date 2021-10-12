@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { NavigationContainer, useLinkProps } from '@react-navigation/native';
+import Upvote from '../Components/Upvote';
 
 function fetchData() {
   //Use Firebase call in this function
@@ -33,11 +34,15 @@ export default function List({navigation, route}) {
             style={styles.image}
             source={require('../assets/favicon.png')}
           />
+          <Text>
+          </Text>
           <View>
             <Text> {item.name} </Text>
             <Text> {item.description} </Text>
           </View> 
+          <Upvote/>
         </View>
+        
       </TouchableOpacity>
     );
   }
