@@ -16,7 +16,7 @@ export default function ViewPost({navigation,route}) {
   function fetchData() {
     //Use Firebase call in this function
     return [
-      { id: 1, title: title, description:"ahfduiagojdnfGAJIDBNSIGBGJBAFJBGFJAGBJDBIAGJBJIGDBJGABGJDBAGBDFSGBDFSGBUFBGURNSGBNUTBRUBJFZDBFUSJ" }
+      { id: 1, title: title, description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim tincidunt viverra. Pellentesque sed diam massa. Proin ultricies vehicula porta. Donec risus justo, blandit nec elit sit amet, mattis mollis risus. Proin imperdiet velit felis, quis maximus ligula egestas id. Pellentesque id mi eget dolor euismod viverra ac et tortor. Sed vel blandit metus." }
     ];
   }
   function renderPost({ item }) {
