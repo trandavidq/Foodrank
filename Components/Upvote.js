@@ -9,16 +9,16 @@ import {
 
 class  Upvote extends React.Component {
     constructor(props) {
-        super(props);
-    
-        this.upHandler = this.upHandler.bind(this);
-    
-        this.downHandler = this.downHandler.bind(this);
-    
-        this.state = {
-          count: 0
-        };
-      }
+      super(props);
+  
+      this.upHandler = this.upHandler.bind(this);
+  
+      this.downHandler = this.downHandler.bind(this);
+  
+      this.state = {
+        count: 0
+      };
+    }
 
 
    render() {

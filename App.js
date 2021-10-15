@@ -16,8 +16,10 @@ import { render } from 'react-dom';
 const Tab = createBottomTabNavigator();
 
 export default class App extends React.Component {
+  componentWillMount() {
+    loadFonts()
+  }
   render() {
-    loadFonts().then()
     return (
       <NavigationContainer>
         <Tab.Navigator>
