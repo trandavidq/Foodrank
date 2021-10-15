@@ -8,35 +8,49 @@ import Home from "./Screens/Home"
 import List from "./Screens/List"
 import CreatePost from "./Screens/CreatePost"
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
+import * as Font from 'expo-font';
+import { render } from 'react-dom';
 
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        
-        <Tab.Screen 
-        name="Foodrank" 
-        component={StackNavHolder}
-        options={{
-          tabBarLabel: 'Categories',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
-          ),
-        }}/>
-
-        <Tab.Screen 
-        name="CreatePost" 
-        component={CreatePost} 
-        options={{
-          tabBarLabel: 'CreatePost',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="post" color={color} size={26} />
-          ),
-        }}/>
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+export default class App extends React.Component {
+  render() {
+    loadFonts().then()
+    return (
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: "Berkshire", color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
+            <Tab.Screen 
+            name="Foodrank" 
+            component={StackNavHolder}
+            options={{
+              title: 'FoodRank',
+              tabBarLabel: 'Categories',
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="home" color={color} size={26} />
+              ),
+            }}/>
+  
+            <Tab.Screen 
+            name="CreatePost"
+            component={CreatePost} 
+            options={{
+              title: "FoodRank",
+              tabBarLabel: 'Create Post',
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="post" color={color} size={26} />
+              ),
+            }}/>
+          </Tab.Group>
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
+}
+async function loadFonts() {
+  await Font.loadAsync({
+    Berkshire: require('./assets/fonts/berkshire-swash.regular.ttf')
+  })
 }

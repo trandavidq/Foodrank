@@ -16,46 +16,39 @@ class  Upvote extends React.Component {
         this.downHandler = this.downHandler.bind(this);
     
         this.state = {
-          upCount: up,
-          downCount: down
+          count: 0
         };
       }
 
 
    render() {
         return (
-            
             <View>
-            <View style={styles.text}>
-                <Entypo 
-                name="arrow-bold-up"
-                size={50} color="green"
-                onPress={this.upHandler}/>
-                <Text>{this.state.upCount}</Text>
-                <Entypo 
-                name="arrow-bold-down"
-                size={50} color="red"
-                onPress={this.downHandler}/>
-                <Text>{this.state.downCount}</Text>
-            </View>
+              <View style={styles.voteContainer}>
+                  <Entypo 
+                    name="arrow-bold-up"
+                    size={50} color="green"
+                    onPress={this.upHandler}
+                  />
+                  <Text>{this.state.count}</Text>
+                  <Entypo 
+                    name="arrow-bold-down"
+                    size={50} color="red"
+                    onPress={this.downHandler}
+                  />
+              </View>
             </View>
         );
    }
-   upHandler() {
-    if (this.state.upCount === up) {
-      this.setState(state => ({
-        upCount: state.upCount + 1,
-        downCount: down
-      }));
-    }
+  upHandler() {
+    this.setState(state => ({
+      count: state.count + 1
+    }));
   }
   downHandler() {
-    if (this.state.downCount === down) {
-      this.setState(state => ({
-        downCount: state.downCount + 1,
-        upCount: up
-      }));
-    }
+    this.setState(state => ({
+      count: state.count - 1
+    }))
   }
 }
 const styles = StyleSheet.create({
@@ -68,6 +61,12 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         right: 50
+    },
+    voteContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
     }
 })
 

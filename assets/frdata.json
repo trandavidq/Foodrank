@@ -1,0 +1,51 @@
+{
+	"data": {
+		"restaurants": {
+			"r1": {
+				"post1": {
+					"name": "Name1",
+					"desc": "Description",
+					"upvotes": 0,
+					"downvotes": 0,
+
+				},
+				"post2": {},
+				"post3": {},
+			},
+			"r2": {
+				"posts": {
+					"post1": {},
+					"post2": {},
+					"post3": {},
+				},
+				"info": {
+					"name": "RestName2",
+					"addr": "RestAddr2",
+				}
+			},
+			"r3": {
+				"post1": {},
+				"post2": {},
+				"post3": {},
+			}
+		},
+
+		"categories": {
+			"c1": {
+				"post1": {},
+				"post2": {},
+				"post3": {},
+			},
+			"c2": {
+				"post1": {},
+				"post2": {},
+				"post3": {},
+			},
+			"c3": {
+				"post1": {},
+				"post2": {},
+				"post3": {},
+			}
+		},
+	}
+}

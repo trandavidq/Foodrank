@@ -18,10 +18,17 @@ const Stack = createStackNavigator();
 
 export default function StackNavHolder(){
     return(
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="FoodList" component={ListScreen} />
-      <Stack.Screen name="ViewPost" component={ViewPostScreen} />
-    </Stack.Navigator>
+      <Stack.Navigator>
+        <Stack.Group screenOptions = {{headerStyle: {backgroundColor: '#F5FFFA'}}}>
+          <Stack.Screen name="Home" component={Home} options = {{
+            title: "Categories"
+          }}/>
+          <Stack.Screen name="FoodList" component={ListScreen} options = {
+            ({route}) => ({title: JSON.stringify(route.params.id).replace(/['"]+/g, '')})
+          }
+          />
+          <Stack.Screen name="ViewPost" component={ViewPostScreen} />
+        </Stack.Group>
+      </Stack.Navigator>
     )
 }
