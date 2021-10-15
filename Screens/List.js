@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { NavigationContainer, useLinkProps } from '@react-navigation/native';
 import Upvote from '../Components/Upvote';
+import { getRandomBytes } from 'expo-random';
 
 function fetchData() {
   //Use Firebase call in this function
@@ -28,19 +29,14 @@ export default function List({navigation, route}) {
 
   function renderItem({ item }) {
     return (
-      <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost',{title: item.name})}>
+      <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {title: item.name})}>
         <View style={styles.item}>
-          <Image
+          {/* <Image
             style={styles.image}
             source={require('../assets/favicon.png')}
-          />
-          <Text>
-          </Text>
-          <View>
+          /> */}
+          <Upvote style = {styles.voting}/>
             <Text> {item.name} </Text>
-            <Text> {item.description} </Text>
-          </View> 
-          <Upvote/>
         </View>
         
       </TouchableOpacity>
@@ -49,7 +45,7 @@ export default function List({navigation, route}) {
   
   return (
     
-    <SafeAreaView>
+    <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
       <Text style={styles.title}>You are on the {JSON.stringify(id).replace(/['"]+/g, '')}page</Text>
       <FlatList
         data={fetchData()}
@@ -62,21 +58,35 @@ export default function List({navigation, route}) {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 20,
+    padding: 5,
     marginVertical: 8,
-    marginHorizontal: 16,
-    width: '100%',
-    backgroundColor: '#EFEFEF',
+    marginHorizontal: 0,
+    width: '95%',
+    backgroundColor: '#F0F8FF',
     flexDirection: "row", 
-    justifyContent:"flex-start",
-    alignItems:"center"
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 60,
+    borderBottomRightRadius: 40,
+    borderTopLeftRadius: 40,
+    shadowOffset: {
+      width: 8,
+      height: 10
+    },
+    shadowOpacity: .5,
+    shadowRadius: 8
+
   },
   image: {
     width: 100,
-    height: 100,
+    height: '50%',
   },
   title: {
     textAlign: 'center',
     fontSize: 20,
   },
+  voting: {
+    alignSelf: 'flex-start',
+    width: 'auto'
+  }
 });

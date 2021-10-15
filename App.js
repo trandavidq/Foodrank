@@ -28,7 +28,7 @@ export default function App() {
         }}/>
 
         <Tab.Screen 
-        name="CreatePost" 
+        name="Create Post" 
         component={CreatePost} 
         options={{
           tabBarLabel: 'CreatePost',
