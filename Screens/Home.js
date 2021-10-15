@@ -49,8 +49,7 @@ export default function Home(props) {
 
   
   return (
-    <SafeAreaView>
-      <Text style= {styles.title}>Food threads</Text>
+    <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
       <FlatList
         data={fetchData()}
         renderItem={renderItem}
@@ -62,14 +61,23 @@ export default function Home(props) {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 20,
+    padding: 5,
     marginVertical: 8,
-    marginHorizontal: 16,
-    width: '100%',
-    backgroundColor: '#EFEFEF',
+    marginHorizontal: 0,
+    width: '95%',
+    backgroundColor: '#F0F8FF',
     flexDirection: "row", 
-    justifyContent:"flex-start",
-    alignItems:"center"
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 60,
+    borderBottomRightRadius: 40,
+    borderTopLeftRadius: 40,
+    shadowOffset: {
+      width: 8,
+      height: 10
+    },
+    shadowOpacity: .5,
+    shadowRadius: 8
   },
   image: {
     width: 100,

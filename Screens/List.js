@@ -27,6 +27,8 @@ function fetchData() {
 export default function List({navigation, route}) {
   const id = route.params.id;
 
+  
+
   function renderItem({ item }) {
     return (
       <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {title: item.name})}>
@@ -38,7 +40,6 @@ export default function List({navigation, route}) {
           <Upvote style = {styles.voting}/>
             <Text> {item.name} </Text>
         </View>
-        
       </TouchableOpacity>
     );
   }
@@ -46,7 +47,6 @@ export default function List({navigation, route}) {
   return (
     
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
-      <Text style={styles.title}>You are on the {JSON.stringify(id).replace(/['"]+/g, '')}page</Text>
       <FlatList
         data={fetchData()}
         renderItem={renderItem}

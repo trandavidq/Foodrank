@@ -22,7 +22,9 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "~3.4.0",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "typeface-berkshire-swash": "^1.1.13",
+    "expo-font": "~9.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
