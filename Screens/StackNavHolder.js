@@ -27,7 +27,7 @@ export default function StackNavHolder(){
             ({route}) => ({title: JSON.stringify(route.params.id).replace(/['"]+/g, '')})
           }
           />
-          <Stack.Screen name="ViewPost" component={ViewPostScreen} />
+          <Stack.Screen name="ViewPost" component={ViewPostScreen} options = {{headerShown: false}}/>
         </Stack.Group>
       </Stack.Navigator>
     )

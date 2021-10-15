@@ -16,14 +16,24 @@ import { render } from 'react-dom';
 const Tab = createBottomTabNavigator();
 
 export default class App extends React.Component {
-  componentWillMount() {
-    loadFonts()
+  constructor(props) {
+    super(props)
+    this.state = {
+      headerFont: ''
+    }
   }
+
+  async componentDidMount() {
+    await loadFonts().then(this.setState({
+      headerFont: 'Berkshire'
+    }))
+  }
+
   render() {
     return (
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: "Berkshire", color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
+          <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: this.state.headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
             <Tab.Screen 
             name="Foodrank" 
             component={StackNavHolder}
