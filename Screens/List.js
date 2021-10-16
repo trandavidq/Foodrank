@@ -31,23 +31,25 @@ export default function List({navigation, route}) {
 
   function renderItem({ item }) {
     return (
-      <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {title: item.name})}>
+      <View style = {styles.container}>
+        <Upvote style = {styles.voting}/>
+        <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {title: item.name})}>
         <View style={styles.item}>
           {/* <Image
             style={styles.image}
             source={require('../assets/favicon.png')}
           /> */}
-          <Upvote style = {styles.voting}/>
             <Text> {item.name} </Text>
         </View>
       </TouchableOpacity>
+      </View>
     );
   }
   
   return (
     
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
-      <FlatList
+      <FlatList style = {styles.list}
         data={fetchData()}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
@@ -61,14 +63,17 @@ const styles = StyleSheet.create({
     padding: 5,
     marginVertical: 8,
     marginHorizontal: 0,
-    width: '95%',
+    width: '100%',
+    height: '100%',
     backgroundColor: '#F0F8FF',
     flexDirection: "row", 
     justifyContent: "center",
     alignItems: "center",
+    
     borderRadius: 60,
     borderBottomRightRadius: 40,
     borderTopLeftRadius: 40,
+    
     shadowOffset: {
       width: 8,
       height: 10
@@ -88,5 +93,16 @@ const styles = StyleSheet.create({
   voting: {
     alignSelf: 'flex-start',
     width: 'auto'
+  },
+  container: {
+    flexDirection: 'row',
+    height: "50%",
+    width: '100%',
+    margin: 1,
+    flex: 1,
+    padding: 10
+  },
+  list: {
+    flexDirection: 'column',
   }
 });

@@ -23,7 +23,7 @@ export default class App extends React.Component {
     }
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     await loadFonts().then(this.setState({
       headerFont: 'Berkshire'
     }))
