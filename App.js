@@ -19,14 +19,15 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      headerFont: ''
+      headerFont: 'Times New Roman'
     }
   }
 
-  async componentWillMount() {
-    await loadFonts().then(this.setState({
+  async componentDidMount() {
+    await loadFonts()
+    this.setState({
       headerFont: 'Berkshire'
-    }))
+    })
   }
 
   render() {
