@@ -23,11 +23,11 @@ export default class App extends React.Component {
     }
   }
 
-  async componentDidMount() {
-    await loadFonts()
+  componentDidMount() {
+    loadFonts().then( () => {
     this.setState({
       headerFont: 'Berkshire'
-    })
+    })})
   }
 
   render() {

@@ -20,11 +20,9 @@ export default function ViewPost({navigation,route}) {
   }
   function renderPost({ item }) {
       return (
-        <View>
-          <View>
-            <Text style={styles.title}> {item.title} </Text>
-            <Text style={styles.description}> {item.description} </Text>
-          </View> 
+        <View style = {{width: '100%'}}>
+          <Text style={styles.title}> {item.title} </Text>
+          <Text style={styles.description}> {item.description} </Text>
         </View>
 
       );

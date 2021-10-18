@@ -22,33 +22,24 @@ function fetchData() {
   ];
 }
 
-
-
 export default function List({navigation, route}) {
   const id = route.params.id;
 
-  
-
   function renderItem({ item }) {
     return (
-      <View style = {styles.container}>
-        <Upvote style = {styles.voting}/>
+      <View style = {styles.listItemContainer}>
+        <Upvote/>
         <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {title: item.name})}>
-        <View style={styles.item}>
-          {/* <Image
-            style={styles.image}
-            source={require('../assets/favicon.png')}
-          /> */}
-            <Text> {item.name} </Text>
-        </View>
-      </TouchableOpacity>
+          <View style={styles.item}>
+              <Text> {item.name} </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
   
   return (
-    
-    <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
+    <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA',}}>
       <FlatList style = {styles.list}
         data={fetchData()}
         renderItem={renderItem}
@@ -60,19 +51,23 @@ export default function List({navigation, route}) {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 5,
-    marginVertical: 8,
-    marginHorizontal: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#F0F8FF',
+    //component placement
     flexDirection: "row", 
     justifyContent: "center",
     alignItems: "center",
+
+    //spacing
+    padding: 5,
+
+    //size
+    minWidth: '90%',
+    height: '100%',
+
+    //coloring
+    backgroundColor: '#F0F8FF',
     
-    borderRadius: 60,
-    borderBottomRightRadius: 40,
-    borderTopLeftRadius: 40,
+    //curved border
+    borderRadius: 40,
     
     shadowOffset: {
       width: 8,
@@ -80,29 +75,20 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: .5,
     shadowRadius: 8
-
-  },
-  image: {
-    width: 100,
-    height: '50%',
   },
   title: {
     textAlign: 'center',
     fontSize: 20,
   },
-  voting: {
-    alignSelf: 'flex-start',
-    width: 'auto'
-  },
-  container: {
+  listItemContainer: {
     flexDirection: 'row',
-    height: "50%",
-    width: '100%',
-    margin: 1,
-    flex: 1,
-    padding: 10
+    alignItems: 'center',
+    height: 100,
+    margin: 5,
+    padding: 5,
+    flex: 1
   },
   list: {
-    flexDirection: 'column',
+    height: 50
   }
 });
