@@ -61,17 +61,15 @@ export default function Home(props) {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 5,
+    padding: 2,
     marginVertical: 8,
-    marginHorizontal: 0,
+    marginHorizontal: 5,
     width: '95%',
     backgroundColor: '#F0F8FF',
     flexDirection: "row", 
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 60,
-    borderBottomRightRadius: 40,
-    borderTopLeftRadius: 40,
     shadowOffset: {
       width: 8,
       height: 10

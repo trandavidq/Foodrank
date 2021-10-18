@@ -27,13 +27,13 @@ class  Upvote extends React.Component {
               <View style={styles.voteContainer}>
                   <Entypo 
                     name="arrow-bold-up"
-                    size={50} color="green"
+                    size={30} color="green"
                     onPress={this.upHandler}
                   />
                   <Text>{this.state.count}</Text>
                   <Entypo 
                     name="arrow-bold-down"
-                    size={50} color="red"
+                    size={30} color="red"
                     onPress={this.downHandler}
                   />
               </View>
@@ -52,21 +52,12 @@ class  Upvote extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-    text: {
-        display: 'flex',
-        flexDirection: "row", 
-        justifyContent:"flex-start",
-    },
-    contain:{
-        position: "absolute",
-        bottom: 0,
-        right: 50
-    },
     voteContainer: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'flex-start',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginRight: 5
     }
 })
 
