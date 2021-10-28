@@ -11,6 +11,29 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import { render } from 'react-dom';
+import * as firebase from 'firebase';
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD408DGZ-QSVCiR4OjCdYUsXqTUGKLBPfM",
+  authDomain: "foodrank-635bd.firebaseapp.com",
+  projectId: "foodrank-635bd",
+  storageBucket: "foodrank-635bd.appspot.com",
+  messagingSenderId: "94700850281",
+  appId: "1:94700850281:web:fa5670b3afd098ff33e6f8",
+  measurementId: "G-MB8B3LKN2P"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+if (!firebase.apps.length) {
+  firebase.initializeApp({});
+}
+else {
+  firebase.app();
+}
+
+// Initialize Firebase
 
 
 const Tab = createBottomTabNavigator();
