@@ -12,6 +12,7 @@ import { StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import { render } from 'react-dom';
 import * as firebase from 'firebase';
+import * as Facebook from 'expo-facebook';
 
 
 const firebaseConfig = {
@@ -45,6 +46,22 @@ export default class App extends React.Component {
       headerFont: 'Times New Roman'
     }
   }
+  
+
+  async checkForToken() {
+    let token = await SecureStore.getItemAsync('token');
+    this.setState({
+      token: token,
+      loading: false,
+    });
+  }
+
+  async saveTokenToSecureStorage(token){
+    SecureStore.setItemAsync("token", token)
+    this.setState({
+      token: token
+    })
+ }
 
   componentDidMount() {
     loadFonts().then( () => {
@@ -84,7 +101,36 @@ export default class App extends React.Component {
       </NavigationContainer>
     );
   }
+  async logIn() {
+    try {
+      //Seed documentation on course site at mobileappdev.teachable.com
+      //For default user names and passwords.
+      await Facebook.initializeAsync('225724646319548');
+      const {
+        type,
+        token,
+        expires,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile'],
+      });
+      if (type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}`
+        );
+        this.saveTokenToSecureStorage(token)
+        Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  }
 }
+
 async function loadFonts() {
   await Font.loadAsync({
     Berkshire: require('./assets/fonts/berkshire-swash.regular.ttf')
