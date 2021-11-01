@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View ,Button, StyleSheet, Alert} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,11 +8,11 @@ import Home from "./Screens/Home"
 import List from "./Screens/List"
 import CreatePost from "./Screens/CreatePost"
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import { render } from 'react-dom';
 import * as firebase from 'firebase';
 import * as Facebook from 'expo-facebook';
+import * as SecureStore from 'expo-secure-store';
 
 
 const firebaseConfig = {
@@ -28,11 +28,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 if (!firebase.apps.length) {
-  firebase.initializeApp({});
+  firebase.initializeApp(firebaseConfigs);
 }
-else {
-  firebase.app();
-}
+
 
 // Initialize Firebase
 
@@ -71,6 +69,13 @@ export default class App extends React.Component {
   }
 
   render() {
+    if(!this.state.token){
+      return (
+        <View style={styles.container}>
+          <Button title="Login With Facebook" onPress={() => this.logIn()} />
+        </View>
+      );
+    }
     return (
       <NavigationContainer>
         <Tab.Navigator>
@@ -121,7 +126,6 @@ export default class App extends React.Component {
           `https://graph.facebook.com/me?access_token=${token}`
         );
         this.saveTokenToSecureStorage(token)
-        Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
       } else {
         // type === 'cancel'
       }
@@ -136,3 +140,10 @@ async function loadFonts() {
     Berkshire: require('./assets/fonts/berkshire-swash.regular.ttf')
   })
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
