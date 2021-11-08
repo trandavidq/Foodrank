@@ -48,7 +48,7 @@ export default class App extends React.Component {
   componentWillMount() {
     setTimeout(() => {
       this.checkForToken();
-    }, 2000);
+    }, 50000);
     this.checkForFirebaseCredential();
     // Listen for authentication state to change.
     firebase.auth().onAuthStateChanged(user => {
@@ -142,7 +142,7 @@ export default class App extends React.Component {
     try {
       //Seed documentation on course site at mobileappdev.teachable.com
       //For default user names and passwords.
-      await Facebook.initializeAsync('184462529575747');
+      await Facebook.initializeAsync({appId: '225724646319548'});
       const {
         type,
         token,
