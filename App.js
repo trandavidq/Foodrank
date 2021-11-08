@@ -41,16 +41,48 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      headerFont: 'Times New Roman'
+      headerFont: 'Times New Roman',
+      token: null
     }
   }
-  
+  componentWillMount() {
+    setTimeout(() => {
+      this.checkForToken();
+    }, 2000);
+    this.checkForFirebaseCredential();
+    // Listen for authentication state to change.
+    firebase.auth().onAuthStateChanged(user => {
+      if (user != null) {
+        console.log('We are authenticated now!');
+        //Alert.alert('We authneticated with Fireabse!', `Hi ${user}`);
+      }
+    });
+  }
 
   async checkForToken() {
     let token = await SecureStore.getItemAsync('token');
     this.setState({
       token: token,
       loading: false,
+    });
+  }
+  async checkForFirebaseCredential() {
+    let credential = await SecureStore.getItemAsync('firebaseCredential');
+    if (credential) {
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .catch(error => {
+          console.log('Auth failed and here the error' + JSON.stringify(error));
+        });
+    }
+  }
+  async saveTokenToSecureStorage(token, credential) {
+    SecureStore.setItemAsync('token', token);
+    //Save Firebase credential
+    SecureStore.setItemAsync('firebaseCredential', credential);
+    this.setState({
+      token: token,
     });
   }
 
@@ -110,7 +142,7 @@ export default class App extends React.Component {
     try {
       //Seed documentation on course site at mobileappdev.teachable.com
       //For default user names and passwords.
-      await Facebook.initializeAsync('225724646319548');
+      await Facebook.initializeAsync('184462529575747');
       const {
         type,
         token,
@@ -125,7 +157,18 @@ export default class App extends React.Component {
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}`
         );
-        this.saveTokenToSecureStorage(token)
+        let credential = firebase.auth.FacebookAuthProvider.credential(
+          token
+        );
+        firebase
+          .auth()
+          .signInWithCredential(credential)
+          .catch(error => {
+            console.log(
+              'Auth failed and here is the error ' + JSON.stringify(error)
+            );
+          });
+        this.saveTokenToSecureStorage(token, credential);
       } else {
         // type === 'cancel'
       }
@@ -138,7 +181,7 @@ export default class App extends React.Component {
 async function loadFonts() {
   await Font.loadAsync({
     Berkshire: require('./assets/fonts/berkshire-swash.regular.ttf')
-  })
+  })  
 }
 const styles = StyleSheet.create({
   container: {
