@@ -5,10 +5,11 @@ import * as firebase from "firebase";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import StackNavHolder from "./Screens/StackNavHolder"
-import Home from "./Screens/Home"
-import List from "./Screens/List"
-import CreatePost from "./Screens/CreatePost"
+import StackNavHolder from "./Screens/StackNavHolder";
+import Home from "./Screens/Home";
+import List from "./Screens/List";
+//mport CreatePost from "./Screens/CreatePost";
+import CreatePost from "./Screens/CreatePost";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import { render } from 'react-dom';
