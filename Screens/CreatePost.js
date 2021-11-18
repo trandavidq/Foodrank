@@ -32,6 +32,7 @@ const dbh = firebase.firestore();
 export default function Post() {
   const [title, setTitle] = React.useState();
   const [body, setBody] = React.useState(); 
+  const [thread,setThread] = React.useState();
 
   function insertPostIntoFirebase(){
     //Read in state data and write post to firebase
@@ -39,6 +40,7 @@ export default function Post() {
     console.log(body);
     dbh.collection('Posts').doc('example2').set({
       title: title,
+      thread: thread,
       body: body,
     });
   }
@@ -48,6 +50,8 @@ export default function Post() {
       <Text>Post title: </Text>
       <TextInput style = {styles.input} placeholder = "Post title" onChangeText = {setTitle} value = {title}></TextInput>
 
+      <Text>Food thread: </Text>
+      <TextInput style = {styles.input} placeholder = "Food thread" onChangeText = {setThread} value = {thread}></TextInput>
       <Text>Post body: </Text>
       <TextInput style = {styles.body} multiline = {true} onChangeText = {setBody} value = {body} ></TextInput>
 
