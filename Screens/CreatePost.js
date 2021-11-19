@@ -58,9 +58,6 @@ export default function Post() {
           thread: thread,
         });
       }
-      else{
-
-      }
   });
     //if(collection.includes(thread))
   }
