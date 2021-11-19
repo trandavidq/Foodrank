@@ -38,11 +38,31 @@ export default function Post() {
     //Read in state data and write post to firebase
     console.log(title);
     console.log(body);
-    dbh.collection('Posts').doc('example2').set({
+    dbh.collection('Posts').add({
       title: title,
       thread: thread,
       body: body,
     });
+    let threadFound = false;
+    dbh.collection("Threads").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          if(doc.data().thread === thread){
+            threadFound = true;
+          }
+          //console.log(doc.id, " => ", doc.data().thread);
+      });
+      if(!threadFound){
+        //Thread not found in DB, add it
+        dbh.collection('Threads').add({
+          thread: thread,
+        });
+      }
+      else{
+
+      }
+  });
+    //if(collection.includes(thread))
   }
   return (
 
