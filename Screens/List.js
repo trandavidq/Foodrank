@@ -11,27 +11,57 @@ import {
 import { NavigationContainer, useLinkProps } from '@react-navigation/native';
 import Upvote from '../Components/Upvote';
 import { getRandomBytes } from 'expo-random';
+import * as firebase from "firebase";
 
-function fetchData() {
-  //Use Firebase call in this function
-  return [
-    { id: 1, name: 'First Sample Item', description:"", rank: '1' },
-    { id: 2, name: 'Second Sample Item', description:"", rank: '2' },
-    { id: 3, name: 'Third Sample Item', description:"", rank: '3' },
-    { id: 4, name: 'Fourth Sample Item', description:"", rank: '4' },
-  ];
+
+try {
+  firebase.initializeApp({
+    apiKey: "AIzaSyD408DGZ-QSVCiR4OjCdYUsXqTUGKLBPfM",
+    authDomain: "foodrank-635bd.firebaseapp.com",
+    databaseURL: "https://foodrank-635bd-default-rtdb.firebaseio.com",
+    projectId: "foodrank-635bd",
+    storageBucket: "foodrank-635bd.appspot.com",
+    messagingSenderId: "94700850281",
+    appId: "1:94700850281:web:fa5670b3afd098ff33e6f8",
+    measurementId: "G-MB8B3LKN2P"
+  });
+} catch (err) {
+  // ignore app already initialized error in snack
 }
+const db = firebase.firestore();
+
 
 export default function List({navigation, route}) {
+  const [data, setPostData] = React.useState([])
   const id = route.params.id;
 
+  React.useEffect(()=>{
+    fetchData()
+  },[])
+
+  async function fetchData() {
+    const postCollection = await db.collection('Posts').get();
+    let postData = []
+    postCollection.forEach((doc) =>{
+      postData.push({
+        id: doc.id,
+        thread: doc.data().thread,
+        body: doc.data().body,
+        title: doc.data().title
+      })  
+    })
+    console.log(postData)
+    setPostData(postData)
+  }
   function renderItem({ item }) {
     return (
       <View style = {styles.listItemContainer}>
         <Upvote/>
-        <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {title: item.name})}>
+        <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {title: item.title})}>
           <View style={styles.item}>
-              <Text> {item.name} </Text>
+              <Text> 
+                {item.title}
+              </Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -41,7 +71,7 @@ export default function List({navigation, route}) {
   return (
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA',}}>
       <FlatList style = {styles.list}
-        data={fetchData()}
+        data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
