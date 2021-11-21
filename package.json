@@ -14,7 +14,7 @@
     "expo": "~42.0.1",
     "expo-auth-session": "~3.3.1",
     "expo-constants": "~11.0.2",
-    "expo-facebook": "~11.3.1",
+    "expo-facebook": "^11.3.1",
     "expo-firebase-recaptcha": "^2.0.2",
     "expo-font": "~9.2.1",
     "expo-random": "~11.2.0",
@@ -27,7 +27,7 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "~3.4.0",
-    "react-native-web": "~0.13.12",
+    "react-native-web": "^0.17.5",
     "react-native-webview": "^11.14.3",
     "typeface-berkshire-swash": "^1.1.13"
   },
