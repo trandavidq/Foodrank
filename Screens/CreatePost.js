@@ -3,11 +3,13 @@ import {
   Image,
   Text,
   SafeAreaView,
+  ScrollView,
   View,
   FlatList,
   StyleSheet,
   TextInput,
   Button,
+  Keyboard,
 } from 'react-native';
 import * as firebase from "firebase";
 
@@ -58,12 +60,13 @@ export default function Post() {
           thread: thread,
         });
       }
+      Keyboard.dismiss();
   });
     //if(collection.includes(thread))
   }
   return (
 
-    <SafeAreaView>
+    <ScrollView scrollEnabled = {true}>
       <Text>Post title: </Text>
       <TextInput style = {styles.input} placeholder = "Post title" onChangeText = {setTitle} value = {title}></TextInput>
 
@@ -73,7 +76,7 @@ export default function Post() {
       <TextInput style = {styles.body} multiline = {true} onChangeText = {setBody} value = {body} ></TextInput>
 
       <Button title= "Submit post" onPress = {insertPostIntoFirebase}></Button>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
