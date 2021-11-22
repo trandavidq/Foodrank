@@ -26,14 +26,17 @@ try {
 const db = firebase.firestore();
 
 export default function ViewPost({navigation,route}) {
+  let id = route.params.id;
   const [data, setPostData] = React.useState([])
   React.useEffect(()=>{
     fetchData()
   },[])
   async function fetchData() {
-    const postCollection = await db.collection('Posts').get();
+    console.log(id);
+    const postCollection = await db.collection('Posts').where(firebase.firestore.FieldPath.documentId(),'==',id).get();
     let postData = []
     postCollection.forEach((doc) =>{
+      console.log(doc.data().title);
       postData.push({
         id: doc.id,
         thread: doc.data().thread,
@@ -41,10 +44,11 @@ export default function ViewPost({navigation,route}) {
         title: doc.data().title
       })  
     })
-    console.log(postData)
+    console.log(id);
+    //console.log(postData)
     setPostData(postData)
   }
-  function renderPost({ item }) {
+  function renderPost({item}) {
       return (
         <View style = {{width: '100%'}}>
           <Text style={styles.title}> {item.title} </Text>
