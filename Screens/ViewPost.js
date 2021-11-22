@@ -41,7 +41,8 @@ export default function ViewPost({navigation,route}) {
         id: doc.id,
         thread: doc.data().thread,
         body: doc.data().body,
-        title: doc.data().title
+        title: doc.data().title,
+        uid: doc.data().user,
       })  
     })
     console.log(id);
@@ -52,6 +53,7 @@ export default function ViewPost({navigation,route}) {
       return (
         <View style = {{width: '100%'}}>
           <Text style={styles.title}> {item.title} </Text>
+          <Text style={styles.user}>Post created by {item.uid}</Text>
           <Text style={styles.description}> {item.body} </Text>
         </View>
 
@@ -69,6 +71,12 @@ export default function ViewPost({navigation,route}) {
 
 }
 const styles = StyleSheet.create({
+    user: {
+      fontSize: 10,
+      opacity: 0.3,
+      textAlign: 'center',
+      marginBottom: 50,
+    },
     description: {
         textAlign: 'center',
         fontSize: 20,
@@ -81,6 +89,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontSize: 20,
       fontWeight: "bold",
-      paddingBottom: 35,
+      paddingBottom: 7,
+      marginTop: 10,
     },
   });

@@ -35,6 +35,7 @@ export default function Post() {
   const [title, setTitle] = React.useState();
   const [body, setBody] = React.useState(); 
   const [thread,setThread] = React.useState();
+  const [user,setUser] = React.useState();
 
   function insertPostIntoFirebase(){
     //Read in state data and write post to firebase
@@ -44,6 +45,7 @@ export default function Post() {
       title: title,
       thread: thread,
       body: body,
+      user: firebase.auth().currentUser.uid,
     });
     let threadFound = false;
     dbh.collection("Threads").get().then((querySnapshot) => {
@@ -73,7 +75,7 @@ export default function Post() {
       <Text>Food thread: </Text>
       <TextInput style = {styles.input} placeholder = "Food thread" onChangeText = {setThread} value = {thread}></TextInput>
       <Text>Post body: </Text>
-      <TextInput style = {styles.body} multiline = {true} onChangeText = {setBody} value = {body} ></TextInput>
+      <TextInput style = {styles.body} multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
 
       <Button title= "Submit post" onPress = {insertPostIntoFirebase}></Button>
     </ScrollView>

@@ -60,7 +60,7 @@ export default function List({navigation, route}) {
     return (
       <View style = {styles.listItemContainer}>
         <Upvote/>
-        <TouchableOpacity onPress= {()=> navigation.navigate('ViewPost', {id: item.id})}>
+        <TouchableOpacity onPress= {()=> navigation.push('ViewPost', {id: item.id})}>
           <View style={styles.item}>
               <Text> 
                 {item.title}

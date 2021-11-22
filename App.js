@@ -50,7 +50,7 @@ export default function App() {
   const recaptchaVerifier = React.useRef(null);
   const [phoneNumber, setPhoneNumber] = React.useState();
   const [verificationId, setVerificationId] = React.useState();
-  const [authenticatedState, setAuthenticatedState] = React.useState(true);
+  const [authenticatedState, setAuthenticatedState] = React.useState(false);
   const [verificationCode, setVerificationCode] = React.useState();
   const [headerFont, setHeaderFont] = React.useState('Times New Roman');
   const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
