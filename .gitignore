@@ -14,5 +14,4 @@ package.json
 # macOS
 .DS_Store
 
-#Firebase SDK
-config/keys.js
+
