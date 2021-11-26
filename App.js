@@ -66,7 +66,7 @@ function HomeTab() {
     tabBarLabel: 'Categories',
     tabBarIcon: ({ color }) => (
       <MaterialCommunityIcons name="home" color={color} size={26} />
-    ),
+    )
   }}/>
 
   <Tab.Screen 
@@ -106,7 +106,7 @@ return (
         <Stack.Screen name='Welcome' component={WelcomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }}/>
         <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }}/>
-        <Stack.Screen name='HomeTab' component={HomeTab} options={{ headerShown: false }}/>
+        <Stack.Screen name='HomeTab' component={HomeTab} options={{ headerShown: false, headerLeft: null, gestureEnabled: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
 

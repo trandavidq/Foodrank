@@ -32,7 +32,7 @@ export default function ViewPost({navigation,route}) {
     fetchData()
   },[])
   async function fetchData() {
-    console.log(id);
+    console.log("(viewpost)(before fetchData) ID: " + id);
     const postCollection = await db.collection('Posts').where(firebase.firestore.FieldPath.documentId(),'==',id).get();
     let postData = []
     postCollection.forEach((doc) =>{
@@ -45,9 +45,10 @@ export default function ViewPost({navigation,route}) {
         uid: doc.data().user,
       })  
     })
-    console.log(id);
+    console.log("(viewpost)(after fetchData) ID: " + id);
     //console.log(postData)
     setPostData(postData)
+    console.log("uid: " + postData[0].uid)
   }
   function renderPost({item}) {
       return (

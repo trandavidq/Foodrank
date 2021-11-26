@@ -29,7 +29,9 @@ export default function StackNavHolder(){
       <Stack.Navigator>
         <Stack.Group screenOptions = {{headerStyle: {backgroundColor: '#F5FFFA'}}}>
           <Stack.Screen name="Home" component={Home} options = {{
-            title: "Categories"
+            title: "Categories",
+            headerLeft: null,
+            gestureEnabled: false
           }}/>
           <Stack.Screen name="FoodList" component={ListScreen} options = {
             ({route}) => ({title: JSON.stringify(route.params.id).replace(/['"]+/g, '')})
