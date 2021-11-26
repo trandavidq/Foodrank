@@ -1,116 +1,143 @@
-import * as React from 'react';
-import { Text, View ,Button, StyleSheet, Alert} from 'react-native';
+import * as React from "react";
+import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Platform, Alert } from "react-native";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import * as firebase from "firebase";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import StackNavHolder from "./Screens/StackNavHolder"
-import Home from "./Screens/Home"
-import List from "./Screens/List"
-import CreatePost from "./Screens/CreatePost"
+import StackNavHolder from "./Screens/StackNavHolder";
+import Home from "./Screens/Home";
+import List from "./Screens/List";
+//mport CreatePost from "./Screens/CreatePost";
+import CreatePost from "./Screens/CreatePost";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import { render } from 'react-dom';
-import * as firebase from 'firebase';
-import * as Facebook from 'expo-facebook';
-import * as SecureStore from 'expo-secure-store';
 
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD408DGZ-QSVCiR4OjCdYUsXqTUGKLBPfM",
-  authDomain: "foodrank-635bd.firebaseapp.com",
-  databaseURL: "https://foodrank-635bd-default-rtdb.firebaseio.com",
-  projectId: "foodrank-635bd",
-  storageBucket: "foodrank-635bd.appspot.com",
-  messagingSenderId: "94700850281",
-  appId: "1:94700850281:web:fa5670b3afd098ff33e6f8",
-  measurementId: "G-MB8B3LKN2P"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfigs);
+// Initialize Firebase JS SDK
+// https://firebase.google.com/docs/web/setup
+const Tab = createBottomTabNavigator();
+try {
+  firebase.initializeApp({
+    apiKey: "AIzaSyD408DGZ-QSVCiR4OjCdYUsXqTUGKLBPfM",
+    authDomain: "foodrank-635bd.firebaseapp.com",
+    databaseURL: "https://foodrank-635bd-default-rtdb.firebaseio.com",
+    projectId: "foodrank-635bd",
+    storageBucket: "foodrank-635bd.appspot.com",
+    messagingSenderId: "94700850281",
+    appId: "1:94700850281:web:fa5670b3afd098ff33e6f8",
+    measurementId: "G-MB8B3LKN2P"
+  });
+} catch (err) {
+  // ignore app already initialized error in snack
 }
 
 
-// Initialize Firebase
+function defaultSave(){
+  const user = firebase.auth().currentUser.uid;
+
+  const dbh = firebase.firestore();
+  dbh.collection("Posts").doc("example").set({
+  employment: "plumber",
+  outfitColor: "red",
+  specialAttack: "fireball",
+  userID: user
+  })
+}
 
 
-const Tab = createBottomTabNavigator();
-
-export default class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      headerFont: 'Times New Roman',
-      token: null
-    }
-  }
-  componentWillMount() {
+export default function App() {
+  const recaptchaVerifier = React.useRef(null);
+  const [phoneNumber, setPhoneNumber] = React.useState();
+  const [verificationId, setVerificationId] = React.useState();
+  const [authenticatedState, setAuthenticatedState] = React.useState(true);
+  const [verificationCode, setVerificationCode] = React.useState();
+  const [headerFont, setHeaderFont] = React.useState('Times New Roman');
+  const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
+  const [message, showMessage] = React.useState((!firebaseConfig || Platform.OS === 'web')
+    ? { text: "To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device."}
+    : undefined);
+  if(!authenticatedState){
+    return (
     
-    this.checkForFirebaseCredential();
-    // Listen for authentication state to change.
-    firebase.auth().onAuthStateChanged(user => {
-      if (user != null) {
-        console.log('We are authenticated now!');
-        //Alert.alert('We authneticated with Fireabse!', `Hi ${user}`);
-      }
-    });
-  }
+      <View style={{ padding: 20, marginTop: 50 }}>
+        <FirebaseRecaptchaVerifierModal
+          ref={recaptchaVerifier}
+          firebaseConfig={firebaseConfig}
+        />
+        <Text style={{ marginTop: 20 }}>Enter phone number</Text>
+        <TextInput
+          style={{ marginVertical: 10, fontSize: 17 }}
+          placeholder="+1 999 999 9999"
+          autoFocus
+    
+          onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
+        />
+        <Button
+          title="Send Verification Code"
+          disabled={!phoneNumber}
+          onPress={async () => {
+            // The FirebaseRecaptchaVerifierModal ref implements the
+            // FirebaseAuthApplicationVerifier interface and can be
+            // passed directly to `verifyPhoneNumber`.
+            try {
+              const phoneProvider = new firebase.auth.PhoneAuthProvider();
+              const verificationId = await phoneProvider.verifyPhoneNumber(
+                phoneNumber,
+                recaptchaVerifier.current
+              );
+              setVerificationId(verificationId);
+              showMessage({
+                text: "Verification code has been sent to your phone.",
+              });
+            } catch (err) {
+              showMessage({ text: `Error: ${err.message}`, color: "red" });
+            }
+          }}
+        />
+        <Text style={{ marginTop: 20 }}>Enter Verification code</Text>
+        <TextInput
+          style={{ marginVertical: 10, fontSize: 17 }}
+          editable={!!verificationId}
+          placeholder="123456"
+          onChangeText={setVerificationCode}
+        />
+        <Button
+          title="Confirm Verification Code"
+          disabled={!verificationId}
+          onPress={async () => {
+            try {
+              const credential = firebase.auth.PhoneAuthProvider.credential(
+                verificationId,
+                verificationCode
+              );
+              await firebase.auth().signInWithCredential(credential);
+              setAuthenticatedState(true);
+              defaultSave()
+            } catch (err) {
+              showMessage({ text: `Error: ${err.message}`, color: "red" });
+            }
+          }}
+        />
+        {message ? (
+          <TouchableOpacity
+            style={[StyleSheet.absoluteFill, { backgroundColor: 0xffffffee, justifyContent: "center" }]}
+            onPress={() => showMessage(undefined)}>
+            <Text style={{color: message.color || "blue", fontSize: 17, textAlign: "center", margin: 20, }}>
+              {message.text}
+            </Text>
+          </TouchableOpacity>
+        ) : undefined}
+      </View>
+    );
 
-  async checkForToken() {
-    let token = await SecureStore.getItemAsync('token');
-    this.setState({
-      token: token,
-      loading: false,
-    });
   }
-  async checkForFirebaseCredential() {
-    let credential = await SecureStore.getItemAsync('firebaseCredential');
-    if (credential) {
-      firebase
-        .auth()
-        .signInWithCredential(credential)
-        .catch(error => {
-          console.log('Auth failed and here the error' + JSON.stringify(error));
-        });
-    }
-  }
-  async saveTokenToSecureStorage(token, credential) {
-    SecureStore.setItemAsync('token', token);
-    //Save Firebase credential
-    SecureStore.setItemAsync('firebaseCredential', credential);
-    this.setState({
-      token: token,
-    });
-  }
-
-  async saveTokenToSecureStorage(token){
-    SecureStore.setItemAsync("token", token)
-    this.setState({
-      token: token
-    })
- }
-
-  componentDidMount() {
-    loadFonts().then( () => {
-    this.setState({
-      headerFont: 'Berkshire'
-    })})
-  }
-
-  render() {
-    if(!this.state.token){
-      return (
-        <View style={styles.container}>
-          <Button title="Login With Facebook" onPress={() => this.logIn()} />
-        </View>
-      );
-    }
+  else{
+    //Authenticated
     return (
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: this.state.headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
+          <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
             <Tab.Screen 
             name="Foodrank" 
             component={StackNavHolder}
@@ -135,51 +162,10 @@ export default class App extends React.Component {
           </Tab.Group>
         </Tab.Navigator>
       </NavigationContainer>
-    );
+    )
   }
-  async logIn() {
-    try {
-      //Seed documentation on course site at mobileappdev.teachable.com
-      //For default user names and passwords.
-      await Facebook.initializeAsync({appId: '225724646319548'});
-      const {
-        type,
-        token,
-        expires,
-        permissions,
-        declinedPermissions,
-      } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ['public_profile'],
-      });
-      if (type === 'success') {
-        // Get the user's name using Facebook's Graph API
-        const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`
-        );
-        ///let credential = firebase.auth.FacebookAuthProvider.credential(token).catch;
-        let credential = firebase.auth.FacebookAuthProvider.credential(
-          token
-        );
-        console.log(credential)
-        firebase
-          .auth()
-          .signInWithCredential(credential)
-          .catch(error => {
-            console.log(
-              'Auth failed and here is the error ' + JSON.stringify(error)
-            );
-          });
-          //firebase.database().ref('users/')
-        this.saveTokenToSecureStorage(token, credential);
-      } else {
-        // type === 'cancel'
-      }
-    } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
-    }
-  }
+  
 }
-
 async function loadFonts() {
   await Font.loadAsync({
     Berkshire: require('./assets/fonts/berkshire-swash.regular.ttf')
