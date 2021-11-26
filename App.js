@@ -32,7 +32,6 @@ try {
   // ignore app already initialized error in snack
 }
 
-
 function defaultSave(){
   const user = firebase.auth().currentUser.uid;
 
@@ -134,6 +133,8 @@ export default function App() {
   }
   else{
     //Authenticated
+    loadFonts()
+    setHeaderFont('Berkshire')
     return (
       <NavigationContainer>
         <Tab.Navigator>

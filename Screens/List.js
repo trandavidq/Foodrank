@@ -50,7 +50,7 @@ export default function List({navigation, route}) {
         title: doc.data().title
       })  
     })
-    console.log(postData)
+    console.log("in list.js: " + postData)
     setPostData(postData)
   }
   function renderItem({ item }) {

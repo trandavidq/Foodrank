@@ -41,6 +41,7 @@ export default function ViewPost({navigation,route}) {
         title: doc.data().title
       })  
     })
+    console.log("in viewPost.js: \n")
     console.log(postData)
     setPostData(postData)
   }
