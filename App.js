@@ -54,7 +54,7 @@ import Dashboard from './Screens/ProfileDashboard';
 
 const Tab = createBottomTabNavigator();
 function HomeTab() {
-  const [headerFont, setHeaderFont] = React.useState('Times New Roman');
+  var [headerFont, setHeaderFont] = React.useState('Berkshire');
   return (
   <Tab.Navigator>
   <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
@@ -80,7 +80,7 @@ function HomeTab() {
     ),
   }}/>
   <Tab.Screen
-  name="Profile Dashboard"
+  name="FoodRank"
   component={Dashboard} 
   />
 </Tab.Group>
@@ -93,11 +93,13 @@ const Stack = createStackNavigator();
 
 export default function App() {
   
+  
   if (!firebase.apps.length) {
   console.log('Connected with Firebase')
   firebase.initializeApp(apiKeys.firebaseConfig);
 }
 
+loadFonts()
 
 return (
     <NavigationContainer>
