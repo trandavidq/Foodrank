@@ -80,8 +80,12 @@ function HomeTab() {
     ),
   }}/>
   <Tab.Screen
-  name="FoodRank"
-  component={Dashboard} 
+  name="Profile"
+  component={Dashboard}
+  options= {{
+    title: 'FoodRank',
+    tabBarLabel: 'Profile'
+  }}
   />
 </Tab.Group>
 </Tab.Navigator>

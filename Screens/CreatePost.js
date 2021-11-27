@@ -10,6 +10,7 @@ import {
   TextInput,
   Button,
   Keyboard,
+  Alert,
 } from 'react-native';
 import * as firebase from "firebase";
 
@@ -31,53 +32,79 @@ const dbh = firebase.firestore();
 
 
 
-export default function Post() {
-  const [title, setTitle] = React.useState();
-  const [body, setBody] = React.useState(); 
-  const [thread,setThread] = React.useState();
-  const [user,setUser] = React.useState();
+export default function Post({navigation: {navigate}}) {
+  const [title, setTitle] = React.useState("");
+  const [body, setBody] = React.useState(""); 
+  const [thread,setThread] = React.useState("");
+  const [user,setUser] = React.useState(""); //will use to try and get user info from db
+  let [reset, setReset] = React.useState(false)
+  React.useEffect(() => {
+    if(reset) {
+      setTitle("")
+      setBody("")
+      setThread("")
+    }
+  }, [reset])
 
+  console.log("navigate: " + navigate)
+
+  //TODO: Add navigation back to home after inserting post (can update to navigate to new post page if desired)
   function insertPostIntoFirebase(){
     //Read in state data and write post to firebase
     console.log(title);
     console.log(body);
-    dbh.collection('Posts').add({
-      title: title,
-      thread: thread,
-      body: body,
-      user: firebase.auth().currentUser.uid,
-    });
-    let threadFound = false;
-    dbh.collection("Threads").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          if(doc.data().thread === thread){
-            threadFound = true;
-          }
-          //console.log(doc.id, " => ", doc.data().thread);
+    if(title == "") {
+      Alert.alert("Please include a title")
+    }
+    else if (body == "") {
+      Alert.alert("Please include a body")
+    }
+    else if (thread == "") {
+      Alert.alert("Please include a Category")
+    }
+    else {
+      dbh.collection('Posts').add({
+        title: title,
+        thread: thread,
+        body: body,
+        user: firebase.auth().currentUser.uid, //note this is a random string, TODO: set user by accessing database to get name
+        upvote: 0,
+        downvote: 0
       });
-      if(!threadFound){
-        //Thread not found in DB, add it
-        dbh.collection('Threads').add({
-          thread: thread,
+      let threadFound = false;
+      dbh.collection("Threads").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            if(doc.data().thread === thread){
+              threadFound = true;
+            }
+            //console.log(doc.id, " => ", doc.data().thread);
         });
-      }
-      Keyboard.dismiss();
-  });
+        if(!threadFound){
+          //Thread not found in DB, add it
+          //TODO: Thread not found - submit for admin approval
+          dbh.collection('Threads').add({
+            thread: thread,
+          });
+        }
+        Keyboard.dismiss();
+        setReset(true)
+        Alert.alert("Posted!")
+        navigate('Home')
+      });
+    }
+    
     //if(collection.includes(thread))
   }
   return (
-
+    //TODO Make Food thread (and later restaurants) a dropdown tab, with an "add new" option
     <ScrollView scrollEnabled = {true}>
-      <Text>Post title: </Text>
       <TextInput style = {styles.input} placeholder = "Post title" onChangeText = {setTitle} value = {title}></TextInput>
 
-      <Text>Food thread: </Text>
-      <TextInput style = {styles.input} placeholder = "Food thread" onChangeText = {setThread} value = {thread}></TextInput>
-      <Text>Post body: </Text>
-      <TextInput style = {styles.body} multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
+      <TextInput style = {styles.input} placeholder = "Category" onChangeText = {setThread} value = {thread}></TextInput>
+      <TextInput style = {styles.body} placeholder="Description" multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
 
-      <Button title= "Submit post" onPress = {insertPostIntoFirebase}></Button>
+      <Button title= "Submit post" onPress = {insertPostIntoFirebase}> </Button>
     </ScrollView>
   );
 }
