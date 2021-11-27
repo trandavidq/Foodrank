@@ -12,22 +12,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ListScreen from './List';
 import * as firebase from "firebase";
+import apiKeys from '../config/keys'
+
 const Stack = createStackNavigator();
 
-
-try {
-  firebase.initializeApp({
-    apiKey: "AIzaSyD408DGZ-QSVCiR4OjCdYUsXqTUGKLBPfM",
-    authDomain: "foodrank-635bd.firebaseapp.com",
-    databaseURL: "https://foodrank-635bd-default-rtdb.firebaseio.com",
-    projectId: "foodrank-635bd",
-    storageBucket: "foodrank-635bd.appspot.com",
-    messagingSenderId: "94700850281",
-    appId: "1:94700850281:web:fa5670b3afd098ff33e6f8",
-    measurementId: "G-MB8B3LKN2P"
-  });
-} catch (err) {
-  // ignore app already initialized error in snack
+if (!firebase.apps.length) {
+  console.log('Connected with Firebase')
+  firebase.initializeApp(apiKeys.firebaseConfig);
 }
 const dbh = firebase.firestore();
 

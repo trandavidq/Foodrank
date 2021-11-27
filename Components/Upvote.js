@@ -3,7 +3,7 @@ import {
     Text,
     View, StyleSheet
   } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as firebase from 'firebase'
 import apiKeys from '../config/keys'
 
@@ -17,11 +17,13 @@ const db = firebase.firestore()
 export default function Upvote({params}) {
   //setup state using hooks:
   const [votes, updateVotes] = useState(0)
+  const [userLikes, updateLikes] = useState([])
+  const [userDislikes, updateDislikes] = useState([])
+  const [upIcon, setUpIcon] = useState("arrow-up-bold-outline")
+  const [downIcon, setDownIcon] = useState("arrow-down-bold-outline")
   useEffect( () => {
     fetchData()
   }, [])
-  //console.log("params: " + JSON.stringify(params.id))
-  //console.log("user: " + firebase.auth().currentUser.uid)
 
   async function fetchData() {
     var docRef = db.collection("Posts").doc(''+params.id)
@@ -31,34 +33,155 @@ export default function Upvote({params}) {
       }
       else {
         //doc doesn't exist
-        console.log("Doc doesn't exist")
+        console.log("Post doc doesn't exist")
       }
     })
+    var userDoc = db.collection("users").doc(''+firebase.auth().currentUser.uid)
+    userDoc.get().then( (doc) => {
+      if(doc.exists) {
+        //user exists in db
+        if(doc.data().likes != undefined) {
+          //user likes established
+          updateLikes(doc.data().likes)
+          if(userLikes.indexOf(params.id) != -1) {
+            setUpIcon("arrow-up-bold")
+          }
+        }
+        else {
+          //setting up user likes
+          db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+            likes: []
+          })
+        }
+        if(doc.data().dislikes != undefined) {
+          //user dislikes established (load them)
+          updateDislikes(doc.data().dislikes)
+          if(userDislikes.indexOf(params.id) != -1) {
+            setDownIcon("arrow-down-bold")
+          }
+        }
+        else {
+          //setting up user dislikes in db
+          db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+            dislikes: []
+          })
+        }
+      }
+      else {
+        console.log("Current user not found in database")
+      }
+    })
+  }
+
+  function buttonUp() {
+    var new_likes = userLikes
+    var new_dislikes = userDislikes
+    if(userLikes.indexOf(params.id) != -1) {
+      //the user has liked this already, is unliking
+      //TODO change image coloring to default
+      setUpIcon("arrow-up-bold-outline")
+      updateVotes(votes - 1)
+      db.collection("Posts").doc(''+params.id).update({
+        votes: votes - 1
+      })
+      db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+        likes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
+      })
+      new_likes.splice(userLikes.indexOf(params.id), 1)
+    }
+    else {
+      setUpIcon("arrow-up-bold")
+      //the user has not liked this already
+      if(userDislikes.indexOf(params.id) != -1) {
+        setDownIcon("arrow-down-bold-outline")
+        //user has disliked, and now is liking
+        updateVotes(votes + 2)
+        db.collection("Posts").doc(''+params.id).update({
+          votes: votes + 2
+        })
+        db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+          dislikes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
+        })
+        new_dislikes.splice(userDislikes.indexOf(params.id), 1)
+      }
+      else {
+        //user is liking, and has not disliked
+        updateVotes(votes + 1)
+        db.collection("Posts").doc(''+params.id).update({
+          votes: votes + 1
+        })
+      }
+      new_likes.unshift(params.id)
+      db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+        likes: firebase.firestore.FieldValue.arrayUnion(""+params.id)
+      })
+    }
+    updateLikes(new_likes)
+    updateDislikes(new_dislikes)
+  }
+
+  function buttonDown() {
+    var new_likes = userLikes
+    var new_dislikes = userDislikes
+    //user disliked
+    if(userDislikes.indexOf(params.id) != -1) {
+      setDownIcon("arrow-down-bold-outline")
+      //the user has disliked this already, is now un-disliking
+      //TODO change image coloring to default
+      updateVotes(votes + 1)
+      db.collection("Posts").doc(''+params.id).update({
+        votes: votes + 1
+      })
+      db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+        dislikes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
+      })
+      new_dislikes.splice(userDislikes.indexOf(params.id), 1)
+    }
+    else {
+      setDownIcon("arrow-down-bold")
+      //the user has not disliked this already
+      if(userLikes.indexOf(params.id) != -1) {
+        setUpIcon("arrow-up-bold-outline")
+        //user has liked, and now is disliking
+        updateVotes(votes - 2)
+        db.collection("Posts").doc(''+params.id).update({
+          votes: votes - 2
+        })
+        db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+          likes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
+        })
+        new_likes.splice(userLikes.indexOf(params.id), 1)
+      }
+      else {
+        //user is disliking, and has not liked
+        updateVotes(votes - 1)
+        db.collection("Posts").doc(''+params.id).update({
+          votes: votes - 1
+        })
+      }
+      new_dislikes.unshift(params.id)
+      db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
+        dislikes: firebase.firestore.FieldValue.arrayUnion(""+params.id)
+      })
+    }
+    updateLikes(new_likes)
+    updateDislikes(new_dislikes)
   }
 
   return (
       <View>
         <View style={styles.voteContainer}>
-            <Entypo 
-              name="arrow-bold-up"
+            <MaterialCommunityIcons 
+              name={upIcon}
               size={30} color="green"
-              onPress={ () => {
-                updateVotes(votes + 1)
-                db.collection("Posts").doc(''+params.id).update({
-                  votes: votes + 1
-                })
-              }}/>
+              onPress={buttonUp}/>
             
             <Text>{votes}</Text>
-            <Entypo 
-              name="arrow-bold-down"
+
+            <MaterialCommunityIcons 
+              name={downIcon}
               size={30} color="red"
-              onPress={ () => {
-                updateVotes(votes - 1)
-                db.collection("Posts").doc(''+params.id).update({
-                  votes: votes - 1
-                })
-              }}/>
+              onPress={buttonDown}/>
         </View>
       </View>
   );
