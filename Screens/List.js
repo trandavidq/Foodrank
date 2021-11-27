@@ -50,7 +50,8 @@ export default function List({navigation, route}) {
         id: doc.id,
         thread: doc.data().thread,
         body: doc.data().body,
-        title: doc.data().title
+        title: doc.data().title,
+        votes: doc.data().votes
       })  
     })
     console.log("in list.js: " + postData)
@@ -59,7 +60,7 @@ export default function List({navigation, route}) {
   function renderItem({ item }) {
     return (
       <View style = {styles.listItemContainer}>
-        <Upvote/>
+        <Upvote params={{id: item.id}}/>
         <TouchableOpacity onPress= {()=> navigation.push('ViewPost', {id: item.id})}>
           <View style={styles.item}>
               <Text> 
@@ -74,7 +75,7 @@ export default function List({navigation, route}) {
   return (
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA',}}>
       <FlatList style = {styles.list}
-        data={data}
+        data={data.sort((a,b) => b.votes - a.votes)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
