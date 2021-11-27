@@ -1,11 +1,6 @@
 import * as React from 'react';
 import {
-  Image,
-  Text,
-  SafeAreaView,
   ScrollView,
-  View,
-  FlatList,
   StyleSheet,
   TextInput,
   Button,
@@ -13,24 +8,13 @@ import {
   Alert,
 } from 'react-native';
 import * as firebase from "firebase";
+import apiKeys from '../config/keys'
 
-try {
-  firebase.initializeApp({
-    apiKey: "AIzaSyD408DGZ-QSVCiR4OjCdYUsXqTUGKLBPfM",
-    authDomain: "foodrank-635bd.firebaseapp.com",
-    databaseURL: "https://foodrank-635bd-default-rtdb.firebaseio.com",
-    projectId: "foodrank-635bd",
-    storageBucket: "foodrank-635bd.appspot.com",
-    messagingSenderId: "94700850281",
-    appId: "1:94700850281:web:fa5670b3afd098ff33e6f8",
-    measurementId: "G-MB8B3LKN2P"
-  });
-} catch (err) {
-  // ignore app already initialized error in snack
+if (!firebase.apps.length) {
+  console.log('Connected with Firebase')
+  firebase.initializeApp(apiKeys.firebaseConfig);
 }
 const dbh = firebase.firestore();
-
-
 
 export default function Post({navigation: {navigate}}) {
   const [title, setTitle] = React.useState("");
@@ -45,8 +29,6 @@ export default function Post({navigation: {navigate}}) {
       setThread("")
     }
   }, [reset])
-
-  console.log("navigate: " + navigate)
 
   //TODO: Add navigation back to home after inserting post (can update to navigate to new post page if desired)
   function insertPostIntoFirebase(){
@@ -68,8 +50,7 @@ export default function Post({navigation: {navigate}}) {
         thread: thread,
         body: body,
         user: firebase.auth().currentUser.uid, //note this is a random string, TODO: set user by accessing database to get name
-        upvote: 0,
-        downvote: 0
+        votes: 0,
       });
       let threadFound = false;
       dbh.collection("Threads").get().then((querySnapshot) => {
