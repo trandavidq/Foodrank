@@ -22,36 +22,6 @@ import Dashboard from './Screens/ProfileDashboard';
 // Initialize Firebase JS SDK
 // https://firebase.google.com/docs/web/setup
 
-
-//const [headerFont, setHeaderFont] = React.useState('Times New Roman');
-// try {
-//   firebase.initializeApp({
-//     apiKey: "AIzaSyD408DGZ-QSVCiR4OjCdYUsXqTUGKLBPfM",
-//     authDomain: "foodrank-635bd.firebaseapp.com",
-//     databaseURL: "https://foodrank-635bd-default-rtdb.firebaseio.com",
-//     projectId: "foodrank-635bd",
-//     storageBucket: "foodrank-635bd.appspot.com",
-//     messagingSenderId: "94700850281",
-//     appId: "1:94700850281:web:fa5670b3afd098ff33e6f8",
-//     measurementId: "G-MB8B3LKN2P"
-//   });
-// } catch (err) {
-//   // ignore app already initialized error in snack
-// }
-
-
-// function defaultSave(){
-//   const user = firebase.auth().currentUser.uid;
-
-//   const dbh = firebase.firestore();
-//   dbh.collection("Posts").doc("example").set({
-//   employment: "plumber",
-//   outfitColor: "red",
-//   specialAttack: "fireball",
-//   userID: user
-//   })
-// }
-
 const Tab = createBottomTabNavigator();
 function HomeTab() {
   var [headerFont, setHeaderFont] = React.useState('Berkshire');
@@ -84,14 +54,16 @@ function HomeTab() {
   component={Dashboard}
   options= {{
     title: 'FoodRank',
-    tabBarLabel: 'Profile'
+    tabBarLabel: 'Profile',
+    tabBarIcon: ({color}) => (
+      <MaterialCommunityIcons name="account" color={color} size={26} />
+    )
   }}
   />
 </Tab.Group>
 </Tab.Navigator>
 )
 }
-
 
 const Stack = createStackNavigator();
 
@@ -118,7 +90,6 @@ return (
 
     )
 }
-
 
 async function loadFonts() {
   await Font.loadAsync({
