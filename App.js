@@ -54,7 +54,7 @@ import Dashboard from './Screens/ProfileDashboard';
 
 const Tab = createBottomTabNavigator();
 function HomeTab() {
-  const [headerFont, setHeaderFont] = React.useState('Times New Roman');
+  var [headerFont, setHeaderFont] = React.useState('Berkshire');
   return (
   <Tab.Navigator>
   <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
@@ -66,7 +66,7 @@ function HomeTab() {
     tabBarLabel: 'Categories',
     tabBarIcon: ({ color }) => (
       <MaterialCommunityIcons name="home" color={color} size={26} />
-    ),
+    )
   }}/>
 
   <Tab.Screen 
@@ -80,8 +80,12 @@ function HomeTab() {
     ),
   }}/>
   <Tab.Screen
-  name="Profile Dashboard"
-  component={Dashboard} 
+  name="Profile"
+  component={Dashboard}
+  options= {{
+    title: 'FoodRank',
+    tabBarLabel: 'Profile'
+  }}
   />
 </Tab.Group>
 </Tab.Navigator>
@@ -93,11 +97,13 @@ const Stack = createStackNavigator();
 
 export default function App() {
   
+  
   if (!firebase.apps.length) {
   console.log('Connected with Firebase')
   firebase.initializeApp(apiKeys.firebaseConfig);
 }
 
+loadFonts()
 
 return (
     <NavigationContainer>
@@ -106,7 +112,7 @@ return (
         <Stack.Screen name='Welcome' component={WelcomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }}/>
         <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }}/>
-        <Stack.Screen name='HomeTab' component={HomeTab} options={{ headerShown: false }}/>
+        <Stack.Screen name='HomeTab' component={HomeTab} options={{ headerShown: false, headerLeft: null, gestureEnabled: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
 

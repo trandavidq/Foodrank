@@ -35,6 +35,7 @@ const dbh = firebase.firestore();
 
 export default function Home(props) {
   const [data, setData]= React.useState([])
+  console.log("home id: " + JSON.stringify(props))
 
   React.useEffect(()=>{
     fetchData()
@@ -42,7 +43,12 @@ export default function Home(props) {
 
   async function fetchData() {
     //Use Firebase call in this function
-    const threadCollection = await dbh.collection('Threads').get();
+    if(props.route.name == "Resaurants") {
+      var threadCollection = await dbh.collection('Restaurants').get();
+    }
+    else {
+      var threadCollection = await dbh.collection('Threads').get();
+    }
     let threadData = [];
     threadCollection.forEach((doc) => {
       threadData.push({
