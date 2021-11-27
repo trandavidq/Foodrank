@@ -26,51 +26,49 @@ const Tab = createBottomTabNavigator();
 function HomeTab() {
   var [headerFont, setHeaderFont] = React.useState('Berkshire');
   return (
-  <Tab.Navigator>
-  <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
-  <Tab.Screen 
-  name="Foodrank" 
-  component={StackNavHolder}
-  options={{
-    title: 'FoodRank',
-    tabBarLabel: 'Categories',
-    tabBarIcon: ({ color }) => (
-      <MaterialCommunityIcons name="home" color={color} size={26} />
-    )
-  }}/>
+    <Tab.Navigator>
+      <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
+        <Tab.Screen 
+          name="Foodrank" 
+          component={StackNavHolder}
+          options={{
+            title: 'FoodRank',
+            tabBarLabel: 'Categories',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="home" color={color} size={26} />
+            )
+          }}/>
 
-  <Tab.Screen 
-  name="CreatePost"
-  component={CreatePost} 
-  options={{
-    title: "FoodRank",
-    tabBarLabel: 'Create Post',
-    tabBarIcon: ({ color }) => (
-      <MaterialCommunityIcons name="post" color={color} size={26} />
-    ),
-  }}/>
-  <Tab.Screen
-  name="Profile"
-  component={Dashboard}
-  options= {{
-    title: 'FoodRank',
-    tabBarLabel: 'Profile',
-    tabBarIcon: ({color}) => (
-      <MaterialCommunityIcons name="account" color={color} size={26} />
-    )
-  }}
-  />
-</Tab.Group>
-</Tab.Navigator>
-)
-}
+      <Tab.Screen 
+        name="CreatePost"
+        component={CreatePost} 
+        options={{
+          title: "FoodRank",
+          tabBarLabel: 'Create Post',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="post" color={color} size={26} />
+          ),
+        }}/>
+
+      <Tab.Screen
+        name="Profile"
+        component={Dashboard}
+        options= {{
+          title: 'FoodRank',
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons name="account" color={color} size={26} />
+          )
+        }}
+      />
+    </Tab.Group>
+  </Tab.Navigator>
+)}
 
 const Stack = createStackNavigator();
-
 export default function App() {
   
-  
-  if (!firebase.apps.length) {
+if (!firebase.apps.length) {
   console.log('Connected with Firebase')
   firebase.initializeApp(apiKeys.firebaseConfig);
 }
