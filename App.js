@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Platform, Alert } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
+import * as asyncStorage from '@react-native-async-storage/async-storage'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
