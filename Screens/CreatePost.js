@@ -21,7 +21,6 @@ export default function Post({navigation: {navigate}}) {
   const [body, setBody] = React.useState(""); 
   const [thread,setThread] = React.useState("");
   const [restaurant, setRestaurant] = React.useState("");
-  const [user,setUser] = React.useState(""); //will use to try and get user info from db
   let [reset, setReset] = React.useState(false)
   React.useEffect(() => {
     if(reset) {
@@ -79,7 +78,7 @@ export default function Post({navigation: {navigate}}) {
           });
         }
         Keyboard.dismiss();
-        //setReset(true)
+        setReset(true)
         Alert.alert("Posted!")
         navigate('Home')
       });
