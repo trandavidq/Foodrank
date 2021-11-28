@@ -35,7 +35,6 @@ export default function List({navigation, route}) {
     //console.log(postCollection);
     let postData = []
     postCollection.forEach((doc) =>{
-      console.log(doc.data().title);
       postData.push({
         id: doc.id,
         thread: doc.data().thread,
@@ -44,13 +43,12 @@ export default function List({navigation, route}) {
         votes: doc.data().votes
       })  
     })
-    console.log(postData)
     setPostData(postData)
   }
   function renderItem({ item }) {
     return (
       <View style = {styles.listItemContainer}>
-        <Upvote params={{id: item.id}}/>
+        <Upvote params={{id: item.id, title: item.title}}/>
         <TouchableOpacity onPress= {()=> navigation.push('ViewPost', {id: item.id})}>
           <View style={styles.item}>
               <Text> 

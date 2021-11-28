@@ -26,7 +26,6 @@ const dbh = firebase.firestore();
 
 export default function Home(props) {
   const [data, setData]= React.useState([])
-  console.log("home id: " + JSON.stringify(props))
 
   React.useEffect(()=>{
     fetchData()
@@ -47,7 +46,6 @@ export default function Home(props) {
         thread: doc.data().thread,
       });
     });
-    console.log(threadData);
 
     //threadData.forEach(element => console.log(element));
     setData(threadData);
