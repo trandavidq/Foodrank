@@ -39,7 +39,7 @@ export default function Post({navigation: {navigate}}) {
       Alert.alert("Please include a title")
     }
     else if (body == "") {
-      Alert.alert("Please include a body")
+      Alert.alert("Please include a Restaurant")
     }
     else if (thread == "") {
       Alert.alert("Please include a Category")
@@ -69,7 +69,6 @@ export default function Post({navigation: {navigate}}) {
             if(doc.data().thread === thread){
               threadFound = true;
             }
-            //console.log(doc.id, " => ", doc.data().thread);
         });
         if(!threadFound){
           //Thread not found in DB, add it
@@ -83,9 +82,7 @@ export default function Post({navigation: {navigate}}) {
         Alert.alert("Posted!")
         navigate('Home')
       });
-    }
-    
-    //if(collection.includes(thread))
+    }    
   }
   return (
     //TODO Make Food thread (and later restaurants) a dropdown tab, with an "add new" option
@@ -93,8 +90,8 @@ export default function Post({navigation: {navigate}}) {
       <TextInput style = {styles.input} placeholder = "Post title" onChangeText = {setTitle} value = {title}></TextInput>
 
       <TextInput style = {styles.input} placeholder = "Category" onChangeText = {setThread} value = {thread}></TextInput>
-      <TextInput style = {styles.input} placeholder = "Restaurant (optional)" onChangeText = {setRestaurant} value = {restaurant}></TextInput>
-      <TextInput style = {styles.body} placeholder="Description" multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
+      <TextInput style = {styles.input} placeholder = "Restaurant" onChangeText = {setRestaurant} value = {restaurant}></TextInput>
+      <TextInput style = {styles.body} placeholder="Description (optional)" multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
 
       <Button title= "Submit post" onPress = {insertPostIntoFirebase}> </Button>
     </ScrollView>
