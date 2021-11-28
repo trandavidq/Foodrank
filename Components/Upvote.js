@@ -43,7 +43,7 @@ export default function Upvote({params}) {
         if(doc.data().likes != undefined) {
           //user likes established
           updateLikes(doc.data().likes)
-          if(userLikes.indexOf(params.id) != -1) {
+          if(doc.data().likes.indexOf(params.id) != -1) {
             setUpIcon("arrow-up-bold")
           }
         }
@@ -56,7 +56,7 @@ export default function Upvote({params}) {
         if(doc.data().dislikes != undefined) {
           //user dislikes established (load them)
           updateDislikes(doc.data().dislikes)
-          if(userDislikes.indexOf(params.id) != -1) {
+          if(doc.data().dislikes.indexOf(params.id) != -1) {
             setDownIcon("arrow-down-bold")
           }
         }

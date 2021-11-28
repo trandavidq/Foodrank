@@ -73,7 +73,9 @@ if (!firebase.apps.length) {
   firebase.initializeApp(apiKeys.firebaseConfig);
 }
 
-loadFonts()
+React.useEffect(() => {
+  loadFonts()
+}, [])
 
 return (
     <NavigationContainer>
