@@ -79,7 +79,6 @@ export default function SignUp({ navigation }) {
           placeholder="Enter your phone number*"
           value={phone}
           onChangeText={(phone) => setPhone(phone)}
-          secureTextEntry={true}
          />
 
           <TextInput

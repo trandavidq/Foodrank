@@ -43,6 +43,7 @@ export default function List({navigation, route}) {
         votes: doc.data().votes
       })  
     })
+
     setPostData(postData)
   }
   function renderItem({ item }) {
