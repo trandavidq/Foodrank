@@ -28,7 +28,6 @@ export default function ViewPost({navigation,route}) {
     const postCollection = await db.collection('Posts').where(firebase.firestore.FieldPath.documentId(),'==',id).get();
     let postData = []
     postCollection.forEach((doc) =>{
-      console.log(doc.data().title);
       postData.push({
         id: doc.id,
         thread: doc.data().thread,
@@ -39,7 +38,6 @@ export default function ViewPost({navigation,route}) {
     })
     //console.log(postData)
     setPostData(postData)
-    console.log("uid: " + postData[0].uid)
   }
 
   function renderPost({item}) {

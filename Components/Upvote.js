@@ -84,6 +84,9 @@ export default function Upvote({params}) {
       db.collection("Posts").doc(''+params.id).update({
         votes: votes - 1
       })
+      db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
+        votes: votes - 1
+      })
       db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
         likes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
       })
@@ -99,6 +102,9 @@ export default function Upvote({params}) {
         db.collection("Posts").doc(''+params.id).update({
           votes: votes + 2
         })
+        db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
+          votes: votes + 2
+        })
         db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
           dislikes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
         })
@@ -108,6 +114,9 @@ export default function Upvote({params}) {
         //user is liking, and has not disliked
         updateVotes(votes + 1)
         db.collection("Posts").doc(''+params.id).update({
+          votes: votes + 1
+        })
+        db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
           votes: votes + 1
         })
       }
@@ -132,6 +141,9 @@ export default function Upvote({params}) {
       db.collection("Posts").doc(''+params.id).update({
         votes: votes + 1
       })
+      db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
+        votes: votes + 1
+      })
       db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
         dislikes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
       })
@@ -147,6 +159,9 @@ export default function Upvote({params}) {
         db.collection("Posts").doc(''+params.id).update({
           votes: votes - 2
         })
+        db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
+          votes: votes - 2
+        })
         db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
           likes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
         })
@@ -156,6 +171,9 @@ export default function Upvote({params}) {
         //user is disliking, and has not liked
         updateVotes(votes - 1)
         db.collection("Posts").doc(''+params.id).update({
+          votes: votes - 1
+        })
+        db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
           votes: votes - 1
         })
       }

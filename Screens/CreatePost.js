@@ -20,6 +20,7 @@ export default function Post({navigation: {navigate}}) {
   const [title, setTitle] = React.useState("");
   const [body, setBody] = React.useState(""); 
   const [thread,setThread] = React.useState("");
+  const [restaurant, setRestaurant] = React.useState("");
   const [user,setUser] = React.useState(""); //will use to try and get user info from db
   let [reset, setReset] = React.useState(false)
   React.useEffect(() => {
@@ -27,14 +28,13 @@ export default function Post({navigation: {navigate}}) {
       setTitle("")
       setBody("")
       setThread("")
+      setRestaurant("")
     }
   }, [reset])
 
   //TODO: Add navigation back to home after inserting post (can update to navigate to new post page if desired)
   function insertPostIntoFirebase(){
     //Read in state data and write post to firebase
-    console.log(title);
-    console.log(body);
     if(title == "") {
       Alert.alert("Please include a title")
     }
@@ -45,13 +45,23 @@ export default function Post({navigation: {navigate}}) {
       Alert.alert("Please include a Category")
     }
     else {
-      dbh.collection('Posts').add({
+      var newPost = dbh.collection('Posts').doc()
+      newPost.set({
         title: title,
         thread: thread,
+        restaurant: restaurant,
         body: body,
         user: firebase.auth().currentUser.uid, //note this is a random string, TODO: set user by accessing database to get name
         votes: 0,
       });
+      dbh.collection("users").doc(""+firebase.auth().currentUser.uid).collection("posts").doc(""+title).set({ //cannot use same title twice
+        title: title,
+        thread: thread,
+        restaurant: restaurant,
+        body: body, //note this is a random string, TODO: set user by accessing database to get name
+        votes: 0,
+        postID: newPost.id
+      })
       let threadFound = false;
       dbh.collection("Threads").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -69,7 +79,7 @@ export default function Post({navigation: {navigate}}) {
           });
         }
         Keyboard.dismiss();
-        setReset(true)
+        //setReset(true)
         Alert.alert("Posted!")
         navigate('Home')
       });
@@ -83,6 +93,7 @@ export default function Post({navigation: {navigate}}) {
       <TextInput style = {styles.input} placeholder = "Post title" onChangeText = {setTitle} value = {title}></TextInput>
 
       <TextInput style = {styles.input} placeholder = "Category" onChangeText = {setThread} value = {thread}></TextInput>
+      <TextInput style = {styles.input} placeholder = "Restaurant (optional)" onChangeText = {setRestaurant} value = {restaurant}></TextInput>
       <TextInput style = {styles.body} placeholder="Description" multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
 
       <Button title= "Submit post" onPress = {insertPostIntoFirebase}> </Button>
