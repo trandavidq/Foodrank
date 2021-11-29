@@ -27,7 +27,7 @@ function HomeTab() {
   var [headerFont, setHeaderFont] = React.useState('Berkshire');
   return (
     <Tab.Navigator>
-      <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: headerFont, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
+      <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#EC2F2F'}, headerTitleStyle: {fontFamily: headerFont, fontSize: 22, color: '#FFF0E9', flexDirection: 'row', alignSelf: 'flex-start'}}}>
         <Tab.Screen 
           name="Foodrank" 
           component={StackNavHolder}
