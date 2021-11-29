@@ -21,6 +21,7 @@ export default function Upvote({params}) {
   const [userDislikes, updateDislikes] = useState([])
   const [upIcon, setUpIcon] = useState("arrow-up-bold-outline")
   const [downIcon, setDownIcon] = useState("arrow-down-bold-outline")
+  const [ignored, forceUpdate] = React.useReducer(x => x + 1, 0);
   useEffect( () => {
     fetchData()
   }, [])

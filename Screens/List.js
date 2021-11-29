@@ -24,10 +24,17 @@ const db = firebase.firestore();
 
 export default function List({navigation, route}) {
   const [data, setPostData] = React.useState([])
+  const [ignored, forceUpdate] = React.useReducer(x => x + 1, 0);
   const id = route.params.id;
 
   React.useEffect(()=>{
     fetchData()
+    navigation.addListener(
+      'focus',
+      () => {
+        forceUpdate()
+      }
+    )
   },[])
   //Filter by thread
   async function fetchData() {
@@ -49,12 +56,12 @@ export default function List({navigation, route}) {
   function renderItem({ item }) {
     return (
       <View style = {styles.listItemContainer}>
-        <Upvote params={{id: item.id, title: item.title}}/>
         <TouchableOpacity onPress= {()=> navigation.push('ViewPost', {id: item.id})}>
           <View style={styles.item}>
-              <Text> 
-                {item.title}
-              </Text>
+          <Upvote params={{id: item.id, title: item.title}}/>
+            <Text> 
+              {item.title}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -76,21 +83,21 @@ const styles = StyleSheet.create({
   item: {
     //component placement
     flexDirection: "row", 
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
 
     //spacing
-    padding: 5,
+    padding: 0,
 
     //size
-    minWidth: '90%',
+    minWidth: '100%',
     height: '100%',
 
     //coloring
     backgroundColor: '#F0F8FF',
     
     //curved border
-    borderRadius: 40,
+    borderRadius: 4,
     
     shadowOffset: {
       width: 8,
@@ -108,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
     margin: 5,
-    padding: 5,
+    padding: 0,
     flex: 1
   },
   list: {

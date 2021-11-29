@@ -87,14 +87,14 @@ export default function Home(props) {
 const styles = StyleSheet.create({
   item: {
     padding: 2,
-    marginVertical: 8,
+    marginVertical: 5,
     marginHorizontal: 5,
     width: '95%',
     backgroundColor: '#F0F8FF',
     flexDirection: "row", 
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 60,
+    borderRadius: 4,
     shadowOffset: {
       width: 8,
       height: 10
@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 20,
-
+    fontSize: 30,
   },
 });
