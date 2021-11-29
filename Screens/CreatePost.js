@@ -35,10 +35,10 @@ export default function Post({navigation: {navigate}}) {
   function insertPostIntoFirebase(){
     //Read in state data and write post to firebase
     if(title == "") {
-      Alert.alert("Please include a title")
+      Alert.alert("Please include a Title")
     }
-    else if (body == "") {
-      Alert.alert("Please include a body")
+    else if (restaurant == "") {
+      Alert.alert("Please include a Restaurant")
     }
     else if (thread == "") {
       Alert.alert("Please include a Category")
@@ -92,8 +92,8 @@ export default function Post({navigation: {navigate}}) {
       <TextInput style = {styles.input} placeholder = "Post title" onChangeText = {setTitle} value = {title}></TextInput>
 
       <TextInput style = {styles.input} placeholder = "Category" onChangeText = {setThread} value = {thread}></TextInput>
-      <TextInput style = {styles.input} placeholder = "Restaurant (optional)" onChangeText = {setRestaurant} value = {restaurant}></TextInput>
-      <TextInput style = {styles.body} placeholder="Description" multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
+      <TextInput style = {styles.input} placeholder = "Restaurant" onChangeText = {setRestaurant} value = {restaurant}></TextInput>
+      <TextInput style = {styles.body} placeholder="Description (optional)" multiline = {true} onChangeText = {setBody} value = {body}></TextInput>
 
       <Button title= "Submit post" onPress = {insertPostIntoFirebase}> </Button>
     </ScrollView>
