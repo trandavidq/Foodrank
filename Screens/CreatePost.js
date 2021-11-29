@@ -77,11 +77,29 @@ export default function Post({navigation: {navigate}}) {
             thread: thread,
           });
         }
-        Keyboard.dismiss();
-        setReset(true)
-        Alert.alert("Posted!")
-        navigate('Home')
       });
+      let restFound = false;
+      dbh.collection("Restaurants").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            if(doc.data().name === restaurant){
+              restFound = true;
+            }
+            //console.log(doc.id, " => ", doc.data().thread);
+        });
+        if(!restFound){
+          //Restaurant not found in DB, add it
+          //TODO: Search for restaurants using Document API, rather than add name manually
+          dbh.collection('Restaurants').add({
+            name: restaurant,
+          });
+        }
+      });
+
+      Keyboard.dismiss();
+      setReset(true)
+      Alert.alert("Posted!")
+      navigate('Home')
     }
     
     //if(collection.includes(thread))
@@ -103,7 +121,7 @@ export default function Post({navigation: {navigate}}) {
 const styles = StyleSheet.create({
   item: {
     padding: 20,
-    marginVertical: 8,
+    marginVertical: 4,
     marginHorizontal: 16,
     width: '100%',
     backgroundColor: '#EFEFEF',
@@ -121,9 +139,9 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    margin: 12,
+    margin: 10,
     borderWidth: 1,
-    padding: 10,
+    padding: 6,
   },
   body: {
     height: 200,
