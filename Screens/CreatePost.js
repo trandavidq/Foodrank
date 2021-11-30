@@ -47,7 +47,7 @@ export default function Post({navigation: {navigate}}) {
       var newPost = dbh.collection('Posts').doc()
       newPost.set({
         title: title,
-        thread: thread,
+        thread: thread.trim(),
         restaurant: restaurant,
         body: body,
         user: firebase.auth().currentUser.uid, //note this is a random string, TODO: set user by accessing database to get name
@@ -57,7 +57,7 @@ export default function Post({navigation: {navigate}}) {
         title: title,
         thread: thread.trim(),
         restaurant: restaurant,
-        body: body, //note this is a random string, TODO: set user by accessing database to get name
+        body: body,
         votes: 0,
         postID: newPost.id
       })
