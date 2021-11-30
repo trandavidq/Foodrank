@@ -37,6 +37,9 @@ export default function List({navigation, route}) {
     else if(route.params.type == "user") {
       var ref = db.collection("users").doc(""+route.params.id).collection("posts")
     }
+    else {
+      console.log("ERROR: Incorrect type paramter")
+    }
     ref
     .onSnapshot(querySnapshot => {
       var postData = []
