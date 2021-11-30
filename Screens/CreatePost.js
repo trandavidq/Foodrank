@@ -55,7 +55,7 @@ export default function Post({navigation: {navigate}}) {
       });
       dbh.collection("users").doc(""+firebase.auth().currentUser.uid).collection("posts").doc(""+title).set({ //cannot use same title twice
         title: title,
-        thread: thread,
+        thread: thread.trim(),
         restaurant: restaurant,
         body: body, //note this is a random string, TODO: set user by accessing database to get name
         votes: 0,

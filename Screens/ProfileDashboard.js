@@ -11,10 +11,12 @@ export default function Dashboard({ navigation }) {
   useEffect(() => {
     async function getUserInfo(){
       try {
-        let doc = await firebase
+        let ref = firebase
           .firestore()
           .collection('users')
           .doc(currentUserUID)
+
+          let doc = await ref
           .get();
 
         if (!doc.exists){
@@ -22,13 +24,22 @@ export default function Dashboard({ navigation }) {
         } else {
           let dataObj = doc.data();
           setFirstName(dataObj.firstName)
+          try {
+            setBioState(dataObj.bio)
+          }
+          catch(e) {
+            console.log(e)
+            ref.update({
+              bio: ""
+            })
+          }
         }
       } catch (err){
       Alert.alert('There is an error.', err.message)
       }
     }
     getUserInfo();
-  })
+  }, [])
 
   async function setBio(){
     console.log("bio: " + bio)
