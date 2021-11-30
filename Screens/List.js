@@ -24,7 +24,6 @@ const db = firebase.firestore();
 
 export default function List({navigation, route}) {
   const [data, setPostData] = React.useState([])
-  const [ignored, forceUpdate] = React.useReducer(x => x + 1, 0);
   const id = route.params.id;
 
   React.useEffect(()=>{
@@ -32,7 +31,13 @@ export default function List({navigation, route}) {
   },[])
   //Filter by thread
   async function fetchData() {
-    const postCollection = db.collection('Posts').where("thread","==",id)
+    if(route.params.type == "thread") {
+      var ref = db.collection('Posts').where("thread","==",id)
+    }
+    else if(route.params.type == "user") {
+      var ref = db.collection("users").doc(""+route.params.id).collection("posts")
+    }
+    ref
     .onSnapshot(querySnapshot => {
       var postData = []
       querySnapshot.forEach(doc => {

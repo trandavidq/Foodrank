@@ -59,7 +59,7 @@ export default function Home(props) {
   function renderItem({ item }) { 
     //console.log(props.navigation)
     return (
-      <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { id : item.thread})}>
+      <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { type: "thread", id : item.thread})}>
       <View style={styles.item}>
         {/* <Text style={{paddingRight: 30}}>Rank: {item.rank}</Text> */}
         <Image

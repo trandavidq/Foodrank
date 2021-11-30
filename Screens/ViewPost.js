@@ -57,7 +57,9 @@ export default function ViewPost({navigation,route}) {
     <SafeAreaView>
       <View style = {{width: '100%'}}>
         <View style={styles.header}>
-          <Upvote params={{id: id, title: postData.title}} style={{justifyContent: "left"}}/>
+          <View>
+            <Upvote params={{id: id, title: postData.title}} style={{justifyContent: "flex-start", flexDirection: "row"}}/>
+          </View>
           <Text style={styles.title}> {postData.title} </Text>
         </View>
         <Text style={styles.user}>{userData != null ? userData.name != "" ? "Post created by " + userData.name: "": ""}</Text>
@@ -72,7 +74,6 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       width: "100%",
       alignItems: "center",
-      justifyContent: "center"
     },
     user: {
       fontSize: 10,
@@ -89,10 +90,10 @@ const styles = StyleSheet.create({
       height: 100,
     },
     title: {
-      textAlign: 'center',
       fontSize: 20,
       fontWeight: "bold",
       paddingBottom: 7,
       marginTop: 10,
+      justifyContent: "center",
     },
   });
