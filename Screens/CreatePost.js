@@ -67,6 +67,9 @@ export default function Post({navigation: {navigate}}) {
             // doc.data() is never undefined for query doc snapshots
             if(doc.data().thread === thread){
               threadFound = true;
+              newPost.update({
+                threadID: doc.id
+              })
             }
             //console.log(doc.id, " => ", doc.data().thread);
         });
@@ -75,6 +78,7 @@ export default function Post({navigation: {navigate}}) {
           //TODO: Thread not found - submit for admin approval
           dbh.collection('Threads').add({
             thread: thread,
+            score: 0
           });
         }
       });

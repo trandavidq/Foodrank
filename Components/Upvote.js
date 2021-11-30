@@ -22,6 +22,8 @@ export default function Upvote({params}) {
   const [upIcon, setUpIcon] = useState("arrow-up-bold-outline")
   const [downIcon, setDownIcon] = useState("arrow-down-bold-outline")
   const [docPoster, updateDocPoster] = useState(null)
+  const [thread, updateThread] = useState(null)
+  const [score, updateScore] = useState(0)
   useEffect( () => {
     fetchData()
   }, [])
@@ -29,9 +31,37 @@ export default function Upvote({params}) {
   async function fetchData() {
     var docRef = db.collection("Posts").doc(''+params.id)
     docRef.get().then((doc) => {
-      if (doc.exists) {
-        updateVotes(doc.data().votes)
-        updateDocPoster(doc.data().user)
+      if (doc.exists) { //post found
+        updateVotes(doc.data().votes) //update post score
+        updateDocPoster(doc.data().user) //update userID who made post
+        if(doc.data().threadID != undefined) { //if post has a threadID saved
+          updateThread(doc.data().threadID) //update thread ID
+
+          var threadRef = db.collection("Threads").doc(""+doc.data().threadID)
+        }
+        else { //no threadID saved, need to find the appropriate thread
+          var threadRef = db.collection("Threads")
+          threadRef.get().then((querySnapshot) => {
+            querySnapshot.forEach((threadDoc) => {
+              if (threadDoc.data().thread === doc.data().thread) { //if thread found
+                updateThread(threadDoc.id) //update thread ID
+                docRef.update({ //save threadID to post
+                  threadID: threadDoc.id
+                })
+              }
+            })
+          })
+        }
+        threadRef.get().then((threadDoc) => {
+          if (threadDoc.data().score != undefined) { //if thread has a score value
+            updateScore(threadDoc.data().score) //set the score state
+          }
+          else {
+            threadRef.update({ //otherwise update the thread to have score field, use default state of 0
+              score: 0
+            })
+          }
+        })
       }
       else {
         //doc doesn't exist
@@ -86,6 +116,10 @@ export default function Upvote({params}) {
       db.collection("Posts").doc(''+params.id).update({
         votes: votes - 1
       })
+      updateScore(score - 1)
+      db.collection("Threads").doc(""+thread).update({
+        score: score - 1
+      })
       if(docPoster == firebase.auth().currentUser.uid) {
         db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
           votes: votes - 1
@@ -106,6 +140,10 @@ export default function Upvote({params}) {
         db.collection("Posts").doc(''+params.id).update({
           votes: votes + 2
         })
+        updateScore(score + 2)
+        db.collection("Threads").doc(""+thread).update({
+          score: score + 2
+        })
         if(docPoster == firebase.auth().currentUser.uid) {
           db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
             votes: votes + 2
@@ -121,6 +159,10 @@ export default function Upvote({params}) {
         updateVotes(votes + 1)
         db.collection("Posts").doc(''+params.id).update({
           votes: votes + 1
+        })
+        updateScore(score + 1)
+        db.collection("Threads").doc(""+thread).update({
+          score: score + 1
         })
         if(docPoster == firebase.auth().currentUser.uid) {
           db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
@@ -149,6 +191,10 @@ export default function Upvote({params}) {
       db.collection("Posts").doc(''+params.id).update({
         votes: votes + 1
       })
+      updateScore(score + 1)
+      db.collection("Threads").doc(""+thread).update({
+        score: score + 1
+      })
       if(docPoster == firebase.auth().currentUser.uid) {
         db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
           votes: votes + 1
@@ -169,6 +215,10 @@ export default function Upvote({params}) {
         db.collection("Posts").doc(''+params.id).update({
           votes: votes - 2
         })
+        updateScore(score - 2)
+        db.collection("Threads").doc(""+thread).update({
+          score: score - 2
+        })
         if(docPoster == firebase.auth().currentUser.uid) {
           db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
             votes: votes - 2
@@ -184,6 +234,10 @@ export default function Upvote({params}) {
         updateVotes(votes - 1)
         db.collection("Posts").doc(''+params.id).update({
           votes: votes - 1
+        })
+        updateScore(score - 1)
+        db.collection("Threads").doc(""+thread).update({
+          score: score - 1
         })
         if(docPoster == firebase.auth().currentUser.uid) {
           db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({

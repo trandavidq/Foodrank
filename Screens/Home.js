@@ -33,10 +33,11 @@ export default function Home(props) {
 
   async function fetchData() {
     //Use Firebase call in this function
+    console.log("route name: " + props.route.name)
     if(props.route.name == "Resaurants") {
       var threadCollection = await dbh.collection('Restaurants').get();
     }
-    else {
+    else { //else its "Home", list threads
       var threadCollection = await dbh.collection('Threads').get();
     }
     let threadData = [];
@@ -44,6 +45,7 @@ export default function Home(props) {
       threadData.push({
         id: doc.id,
         thread: doc.data().thread,
+        score: doc.data().score
       });
     });
 
