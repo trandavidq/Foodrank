@@ -24,35 +24,36 @@ const db = firebase.firestore();
 
 export default function List({navigation, route}) {
   const [data, setPostData] = React.useState([])
-  const [ignored, forceUpdate] = React.useReducer(x => x + 1, 0);
   const id = route.params.id;
 
   React.useEffect(()=>{
     fetchData()
-    navigation.addListener(
-      'focus',
-      () => {
-        forceUpdate()
-      }
-    )
   },[])
   //Filter by thread
   async function fetchData() {
-    const postCollection = await db.collection('Posts').where("thread","==",id).get();
-    //console.log(postCollection);
-    let postData = []
-    postCollection.forEach((doc) =>{
-      postData.push({
-        id: doc.id,
-        thread: doc.data().thread,
-        body: doc.data().body,
-        title: doc.data().title,
-        votes: doc.data().votes
-      })  
+    if(route.params.type == "thread") {
+      var ref = db.collection('Posts').where("thread","==",id)
+    }
+    else if(route.params.type == "user") {
+      var ref = db.collection("users").doc(""+route.params.id).collection("posts")
+    }
+    ref
+    .onSnapshot(querySnapshot => {
+      var postData = []
+      querySnapshot.forEach(doc => {
+        postData.push({
+          id: doc.id,
+          thread: doc.data().thread,
+          body: doc.data().body,
+          title: doc.data().title,
+          votes: doc.data().votes
+        })  
+      })
+      setPostData(postData)
     })
-
-    setPostData(postData)
   }
+    //console.log(postCollection);
+
   function renderItem({ item }) {
     return (
       <View style = {styles.listItemContainer}>

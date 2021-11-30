@@ -13,6 +13,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ListScreen from './List';
 import * as firebase from "firebase";
 import apiKeys from '../config/keys'
+import onSnapshot from "firebase/firestore"
 
 const Stack = createStackNavigator();
 
@@ -34,28 +35,31 @@ export default function Home(props) {
   async function fetchData() {
     //Use Firebase call in this function
     if(props.route.name == "Resaurants") {
-      var threadCollection = await dbh.collection('Restaurants').get();
+      var ref = await dbh.collection('Restaurants')
     }
-    else {
-      var threadCollection = await dbh.collection('Threads').get();
+    else { //else its "Home", list threads
+      var ref = await dbh.collection('Threads')
     }
-    let threadData = [];
-    threadCollection.forEach((doc) => {
-      threadData.push({
-        id: doc.id,
-        thread: doc.data().thread,
-      });
+    ref.onSnapshot((querySnapshot) => {
+      var threadData = [];
+      querySnapshot.forEach((doc) => {
+        threadData.push({
+          id: doc.id,
+          thread: doc.data().thread,
+          score: doc.data().score
+        });
+      })
+      setData(threadData);
     });
 
     //threadData.forEach(element => console.log(element));
-    setData(threadData);
   }
 
 
   function renderItem({ item }) { 
     //console.log(props.navigation)
     return (
-      <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { id : item.thread})}>
+      <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { type: "thread", id : item.thread})}>
       <View style={styles.item}>
         {/* <Text style={{paddingRight: 30}}>Rank: {item.rank}</Text> */}
         <Image
@@ -71,7 +75,6 @@ export default function Home(props) {
     );
   }
 
-  
   return (
     
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
