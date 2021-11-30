@@ -29,30 +29,26 @@ export default function List({navigation, route}) {
 
   React.useEffect(()=>{
     fetchData()
-    navigation.addListener(
-      'focus',
-      () => {
-        forceUpdate()
-      }
-    )
   },[])
   //Filter by thread
   async function fetchData() {
-    const postCollection = await db.collection('Posts').where("thread","==",id).get();
-    //console.log(postCollection);
-    let postData = []
-    postCollection.forEach((doc) =>{
-      postData.push({
-        id: doc.id,
-        thread: doc.data().thread,
-        body: doc.data().body,
-        title: doc.data().title,
-        votes: doc.data().votes
-      })  
+    const postCollection = db.collection('Posts').where("thread","==",id)
+    .onSnapshot(querySnapshot => {
+      var postData = []
+      querySnapshot.forEach(doc => {
+        postData.push({
+          id: doc.id,
+          thread: doc.data().thread,
+          body: doc.data().body,
+          title: doc.data().title,
+          votes: doc.data().votes
+        })  
+      })
+      setPostData(postData)
     })
-
-    setPostData(postData)
   }
+    //console.log(postCollection);
+
   function renderItem({ item }) {
     return (
       <View style = {styles.listItemContainer}>

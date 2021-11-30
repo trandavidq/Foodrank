@@ -13,6 +13,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ListScreen from './List';
 import * as firebase from "firebase";
 import apiKeys from '../config/keys'
+import onSnapshot from "firebase/firestore"
 
 const Stack = createStackNavigator();
 
@@ -33,24 +34,25 @@ export default function Home(props) {
 
   async function fetchData() {
     //Use Firebase call in this function
-    console.log("route name: " + props.route.name)
     if(props.route.name == "Resaurants") {
-      var threadCollection = await dbh.collection('Restaurants').get();
+      var ref = await dbh.collection('Restaurants')
     }
     else { //else its "Home", list threads
-      var threadCollection = await dbh.collection('Threads').get();
+      var ref = await dbh.collection('Threads')
     }
-    let threadData = [];
-    threadCollection.forEach((doc) => {
-      threadData.push({
-        id: doc.id,
-        thread: doc.data().thread,
-        score: doc.data().score
-      });
+    ref.onSnapshot((querySnapshot) => {
+      var threadData = [];
+      querySnapshot.forEach((doc) => {
+        threadData.push({
+          id: doc.id,
+          thread: doc.data().thread,
+          score: doc.data().score
+        });
+      })
+      setData(threadData);
     });
 
     //threadData.forEach(element => console.log(element));
-    setData(threadData);
   }
 
 
@@ -73,7 +75,6 @@ export default function Home(props) {
     );
   }
 
-  
   return (
     
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
