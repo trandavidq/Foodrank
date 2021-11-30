@@ -62,7 +62,6 @@ export default function Dashboard({ navigation }) {
       <View style={styles.container2}>
       <Text style={styles.text}>Hi {firstName}</Text>
       <TextInput style={styles.textInput} value ={bio} onChangeText={setBioState} placeholder="Bio"/>
-      <Text> {bio}</Text>
       <TouchableOpacity style={styles.button} onPress={setBio}>
         <Text style={styles.buttonText}>UpdateBio</Text>
       </TouchableOpacity>
