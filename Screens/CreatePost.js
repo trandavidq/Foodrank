@@ -65,7 +65,7 @@ export default function Post({navigation: {navigate}}) {
       dbh.collection("Threads").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            if(doc.data().thread === thread){
+            if(doc.data().thread === thread.trim()){
               threadFound = true;
               newPost.update({
                 threadID: doc.id
@@ -77,7 +77,7 @@ export default function Post({navigation: {navigate}}) {
           //Thread not found in DB, add it
           //TODO: Thread not found - submit for admin approval
           dbh.collection('Threads').add({
-            thread: thread,
+            thread: thread.trim(),
             score: 0
           });
         }
