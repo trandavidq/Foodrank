@@ -112,17 +112,15 @@ export default function Post({navigation: {navigate}}) {
 
     id = uuid.v4()
     setUUID(id)
-    // var postRef = firebase.storage().ref().child('postImages/'+id)
-    // postRef.put(blob).then( (snapshot) => {
-    //   console.log("Uploaded")
-    // })  
-    const fileRef = firestore.storage().ref();
-    const result = await fileRef.uploadBytes(blob);
+    var postRef = firebase.storage().ref().child('postImages/'+id)
+    postRef.put(blob).then( (snapshot) => {
+      console.log("Uploaded")
+    })  
 
     // We're done with the blob, close and release it
     blob.close();
   
-    return await getDownloadURL(fileRef);
+    return await postRef.getDownloadURL();
   }
 
   _maybeRenderImage = () => {
