@@ -34,34 +34,47 @@ export default function Upvote({params}) {
       if (doc.exists) { //post found
         updateVotes(doc.data().votes) //update post score
         updateDocPoster(doc.data().user) //update userID who made post
-        if(doc.data().threadID != undefined) { //if post has a threadID saved
+        try { //try accessing post's threadID
           updateThread(doc.data().threadID) //update thread ID
 
           var threadRef = db.collection("Threads").doc(""+doc.data().threadID)
+          threadRef.get().then((threadDoc) => {
+            try { //try to set score using thread's score, will error if no score value set yet
+              updateScore(threadDoc.data().score) //set the score state
+            }
+            catch(e) { //no score field
+              threadRef.update({ //otherwise update the thread to have score field, use default state of 0
+                score: 0
+              })
+            }
+          })
         }
-        else { //no threadID saved, need to find the appropriate thread
+        catch(e) { //errors if threadID is undefined, need to find appropriate threaad
           var threadRef = db.collection("Threads")
           threadRef.get().then((querySnapshot) => {
-            querySnapshot.forEach((threadDoc) => {
+            newThreadID = ""
+            querySnapshot.forEach((threadDoc) => { //look at each thread and see if correct
               if (threadDoc.data().thread === doc.data().thread) { //if thread found
                 updateThread(threadDoc.id) //update thread ID
                 docRef.update({ //save threadID to post
                   threadID: threadDoc.id
                 })
+                newThreadID = thread.id
+              }
+            })
+            threadRef = db.collection("Threads").doc(""+newThreadID)
+            threadRef.get().then((threadDoc) => {
+              try { //try to set score using thread's score, will error if no score value set yet
+                updateScore(threadDoc.data().score) //set the score state
+              }
+              catch(e) { //no score field
+                threadRef.update({ //otherwise update the thread to have score field, use default state of 0
+                  score: 0
+                })
               }
             })
           })
         }
-        threadRef.get().then((threadDoc) => {
-          if (threadDoc.data().score != undefined) { //if thread has a score value
-            updateScore(threadDoc.data().score) //set the score state
-          }
-          else {
-            threadRef.update({ //otherwise update the thread to have score field, use default state of 0
-              score: 0
-            })
-          }
-        })
       }
       else {
         //doc doesn't exist
@@ -72,28 +85,26 @@ export default function Upvote({params}) {
     userDoc.get().then( (doc) => {
       if(doc.exists) {
         //user exists in db
-        if(doc.data().likes != undefined) {
-          //user likes established
+        try { //if user has likes field, make updates
           updateLikes(doc.data().likes)
           if(doc.data().likes.indexOf(params.id) != -1) {
             setUpIcon("arrow-up-bold")
           }
         }
-        else {
-          //setting up user likes
+        catch(e) { //user doesn't have likes field, need to update doc and use default state values
+          console.log(e)
           db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
             likes: []
           })
         }
-        if(doc.data().dislikes != undefined) {
-          //user dislikes established (load them)
+        try { //same thing with dislikes as with likes
           updateDislikes(doc.data().dislikes)
           if(doc.data().dislikes.indexOf(params.id) != -1) {
             setDownIcon("arrow-down-bold")
           }
         }
-        else {
-          //setting up user dislikes in db
+        catch(e) {
+          console.log(e)
           db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
             dislikes: []
           })
