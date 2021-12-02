@@ -33,11 +33,17 @@ export default function Home(props) {
     fetchData()
   },[])
 
+  React.useEffect(() => {
+    setRest(props.route.name == "Restaurants")
+  }, [props.navigation])
+
   async function fetchData() {
     //Use Firebase call in this function
+    let isRest = false
     if(props.route.name == "Restaurants") {
       var ref = await dbh.collection('Restaurants')
       setRest(true)
+      isRest = true
       console.log("Restaurants list")
     }
     else { //else its "Home", list threads
@@ -47,7 +53,7 @@ export default function Home(props) {
     ref.onSnapshot((querySnapshot) => {
       var data = [];
       querySnapshot.forEach((doc) => {
-        if(rest) {
+        if(isRest) {
           data.push({
             id: doc.id,
             name: doc.data().name,

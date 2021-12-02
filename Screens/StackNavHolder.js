@@ -20,7 +20,7 @@ export default function StackNavHolder(){
             headerShown: false
           }}/>
           <Stack.Screen name="FoodList" component={ListScreen} options = {
-            ({route}) => ({title: JSON.stringify(route.params.id).replace(/['"]+/g, '')})
+            ({route}) => ({title: route.params.id})
           }
           />
            {/** For some reason stack navigator doesn't work with this screen? */}

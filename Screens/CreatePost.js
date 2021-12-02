@@ -76,10 +76,14 @@ export default function Post({navigation: {navigate}}) {
         if(!threadFound){
           //Thread not found in DB, add it
           //TODO: Thread not found - submit for admin approval
-          dbh.collection('Threads').add({
+          threadDoc = dbh.collection('Threads').doc()
+          threadDoc.set({
             thread: thread,
             score: 0
           });
+          newPost.update({
+            threadID: threadDoc.id
+          })
         }
       });
       let restFound = false;
@@ -94,7 +98,8 @@ export default function Post({navigation: {navigate}}) {
         if(!restFound){
           //Restaurant not found in DB, add it
           //TODO: Search for restaurants using Document API, rather than add name manually
-          dbh.collection('Restaurants').add({
+          restDoc = dbh.collection('Restaurants').doc()
+          restDoc.set({
             name: restaurant,
           });
         }
