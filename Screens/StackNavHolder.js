@@ -5,6 +5,7 @@ import * as Font from 'expo-font';
 import ListScreen from './List';
 import Home from "./Home";
 import ViewPostScreen from "./ViewPost";
+import HomeTabNavi from './HomeTabNavi'
 
 const Stack = createStackNavigator();
 export default function StackNavHolder(){
@@ -12,10 +13,11 @@ export default function StackNavHolder(){
     return(
       <Stack.Navigator>
         <Stack.Group screenOptions = {{headerStyle: {backgroundColor: '#F5FFFA'}}}>
-          <Stack.Screen name="Home" component={Home} options = {{
-            title: "Categories",
+          <Stack.Screen name="Home" component={HomeTabNavi} options = {{
+            title: "Home",
             headerLeft: null,
-            gestureEnabled: false
+            gestureEnabled: false,
+            headerShown: false
           }}/>
           <Stack.Screen name="FoodList" component={ListScreen} options = {
             ({route}) => ({title: JSON.stringify(route.params.id).replace(/['"]+/g, '')})
