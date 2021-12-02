@@ -27,6 +27,7 @@ const dbh = firebase.firestore();
 
 export default function Home(props) {
   const [data, setData]= React.useState([])
+  const [rest, setRest] = React.useState(false)
 
   React.useEffect(()=>{
     fetchData()
@@ -34,32 +35,52 @@ export default function Home(props) {
 
   async function fetchData() {
     //Use Firebase call in this function
-    if(props.route.name == "Resaurants") {
+    if(props.route.name == "Restaurants") {
       var ref = await dbh.collection('Restaurants')
+      setRest(true)
+      console.log("Restaurants list")
     }
     else { //else its "Home", list threads
       var ref = await dbh.collection('Threads')
+      console.log("Thread list")
     }
     ref.onSnapshot((querySnapshot) => {
-      var threadData = [];
+      var data = [];
       querySnapshot.forEach((doc) => {
-        threadData.push({
-          id: doc.id,
-          thread: doc.data().thread,
-          score: doc.data().score
-        });
+        if(rest) {
+          data.push({
+            id: doc.id,
+            name: doc.data().name,
+          });
+        }
+        else {
+          data.push({
+            id: doc.id,
+            thread: doc.data().thread,
+            score: doc.data().score
+          });
+        }
       })
-      setData(threadData);
+      setData(data);
     });
 
-    //threadData.forEach(element => console.log(element));
+    //data.forEach(element => console.log(element));
   }
 
 
   function renderItem({ item }) { 
     //console.log(props.navigation)
+    if(rest) {
+      var list_type = "restaurant"
+      var title = item.name
+    }
+    else {
+      var list_type = "thread"
+      var title = item.thread
+    }
+
     return (
-      <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { type: "thread", id : item.thread})}>
+      <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { type: list_type, id : title})}>
       <View style={styles.item}>
         {/* <Text style={{paddingRight: 30}}>Rank: {item.rank}</Text> */}
         <Image
@@ -67,7 +88,7 @@ export default function Home(props) {
           source={require('../assets/favicon.png')}
         />
         <View>
-          <Text> {item.thread} </Text>
+          <Text> {title} </Text>
           {/* <Text> {item.description} </Text> */}
         </View> 
       </View>
@@ -81,7 +102,7 @@ export default function Home(props) {
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.thread}
+        keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
   );

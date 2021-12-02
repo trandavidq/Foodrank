@@ -14,9 +14,10 @@ export default function TopTabNavi(){
       <Tab.Navigator>
         <Tab.Group screenOptions = {{headerStyle: {backgroundColor: '#F5FFFA'}}}>
             <Tab.Screen name="Categories" component={Home} options = {{
-                title: "Categories",
-                headerLeft: null,
-                gestureEnabled: false
+                title: "Categories"
+            }}/>
+            <Tab.Screen name="Restaurants" component={Home} options = {{
+                title: "Restaurants",
             }}/>
         </Tab.Group>
       </Tab.Navigator>
