@@ -100,6 +100,25 @@ export default function Home(props) {
           break;
       }
     }
+    else if(rest){
+      switch(title){
+        case 'Papa Johns':
+          icon = require('../assets/papajohns.png');
+          break;
+        case 'Panera':
+          icon = require('../assets/panera.png');
+          break;
+        case "Einstein's Bagels":
+          icon = require('../assets/einsteinbros.png');
+          break;
+        case 'Five Guys':
+          icon = require('../assets/fiveguys.png');
+          break;
+        default:
+          icon = require('../assets/favicon.png');
+          break;
+      }
+    }
     return (
       <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { type: list_type, id : title})}>
       <View style={styles.item}>
