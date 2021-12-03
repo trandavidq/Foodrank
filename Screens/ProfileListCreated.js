@@ -85,7 +85,7 @@ export default function ProfileListCreated(props){
           function renderItem({ item }) {
             return (
               <View style = {styles.listItemContainer}>
-                <TouchableOpacity onPress= {()=> navigation.push('ViewPost', {id: item.id})}>
+                <TouchableOpacity onPress= {() => console.log("Remember to implement navigate from user profile")}>
                   <View style={styles.item}>
                     <Text styles={{fontSize: 40}}>
                         Title: {" "} 
