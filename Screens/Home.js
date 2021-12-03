@@ -137,7 +137,7 @@ export default function Home(props) {
           
           // source = {require('../assets/burger.jpg')}
         />
-        <View style = {{flexDirection: 'row'}}>
+        <View style = {{flexDirection: 'row', display: 'inline-block'}}>
           <Text style= {{fontSize: 16, fontWeight: 'bold', fontFamily: 'OpenSans', paddingLeft: 20}}>{title}</Text>
           <Text style = {{fontSize: 16, fontWeight: 'bold', color: 'green',}}>{rest ? "" : ": "+item.score}</Text>
           {/* <Text> {item.description} </Text> */}
