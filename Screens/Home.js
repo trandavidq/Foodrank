@@ -33,10 +33,6 @@ export default function Home(props) {
     fetchData()
   },[])
 
-  React.useEffect(() => {
-    setRest(props.route.name == "Restaurants")
-  }, [props.navigation])
-
   async function fetchData() {
     //Use Firebase call in this function
     let isRest = false

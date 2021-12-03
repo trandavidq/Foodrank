@@ -21,7 +21,6 @@ if (!firebase.apps.length) {
 }
 const db = firebase.firestore();
 
-
 export default function List({navigation, route}) {
   const [data, setPostData] = React.useState([])
   const id = route.params.id;
@@ -29,6 +28,7 @@ export default function List({navigation, route}) {
   React.useEffect(()=>{
     fetchData()
   },[])
+
   //Filter by thread
   async function fetchData() {
     if(route.params.type == "thread") {
