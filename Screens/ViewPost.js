@@ -68,7 +68,7 @@ export default function ViewPost({navigation,route}) {
         <Text style={styles.description}> {postData.body} </Text>
         <View style={{borderBottomColor: 'black', borderBottomWidth: 1, padding: 15, opacity: 0.1}}/>
       </View>
-      <Comments params={{id: id}}/>
+      <Comments style={{flex: 1}} params={{id: id}}/>
     </SafeAreaView>
   );
 

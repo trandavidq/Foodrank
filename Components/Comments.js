@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   list: {
-    height: 50
+    height: '100%'
   },
   input: {
     height: 40,
