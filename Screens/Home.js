@@ -66,10 +66,11 @@ export default function Home(props) {
 
     //data.forEach(element => console.log(element));
   }
-
+  
 
   function renderItem({ item }) { 
     //console.log(props.navigation)
+    
     if(rest) {
       var list_type = "restaurant"
       var title = item.name
@@ -78,17 +79,59 @@ export default function Home(props) {
       var list_type = "thread"
       var title = item.thread
     }
-
+    var icon = require('../assets/favicon.png');
+    if(!rest){
+      //Only display for threads
+      switch(title){
+        case 'Chinese':
+          icon = require('../assets/chinese.jpg');
+          break;
+        case 'Burgers':
+          icon = require('../assets/burger.jpg');
+          break;
+        case 'Pizza':
+          icon = require('../assets/pizza.jpg');
+          break;
+        case 'Bagel':
+          icon = require('../assets/Bagels.jpg');
+          break;
+        default: 
+          icon = require('../assets/favicon.png');
+          break;
+      }
+    }
+    else if(rest){
+      switch(title){
+        case 'Papa Johns':
+          icon = require('../assets/papajohns.png');
+          break;
+        case 'Panera':
+          icon = require('../assets/panera.png');
+          break;
+        case "Einstein's Bagels":
+          icon = require('../assets/einsteinbros.png');
+          break;
+        case 'Five Guys':
+          icon = require('../assets/fiveguys.png');
+          break;
+        default:
+          icon = require('../assets/favicon.png');
+          break;
+      }
+    }
     return (
       <TouchableOpacity onPress= {() => props.navigation.push('FoodList', { type: list_type, id : title})}>
       <View style={styles.item}>
         {/* <Text style={{paddingRight: 30}}>Rank: {item.rank}</Text> */}
         <Image
           style={styles.image}
-          source={require('../assets/favicon.png')}
+          //require('../assets/favicon.png')
+          source={icon}
+          
+          // source = {require('../assets/burger.jpg')}
         />
         <View>
-          <Text> {title} </Text>
+          <Text> {rest ? "" : "Total Score: " + item.score + " "}{title} </Text>
           {/* <Text> {item.description} </Text> */}
         </View> 
       </View>
@@ -100,7 +143,7 @@ export default function Home(props) {
     
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
       <FlatList
-        data={data}
+        data={rest ? data : data.sort((a,b) => b.score - a.score)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />

@@ -38,7 +38,7 @@ export default function List({navigation, route}) {
       var ref = db.collection("Posts").where("restaurant", "==", route.params.id)
     }
     else {
-      console.log("ERROR: Incorrect type paramter")
+      console.log("ERROR: Incorrect type parameter")
     }
     ref
     .onSnapshot(querySnapshot => {
