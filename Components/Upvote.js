@@ -49,12 +49,32 @@ export default function Upvote({params}) {
 
         var threadRef = db.collection("Threads").doc(""+doc.data().threadID)
         threadRef.get().then((threadDoc) => {
-          //try to set score using thread's score, will error if no score value set yet
-          updateScore(threadDoc.data().score) //set the score state
-        }).catch(e => {
-          threadRef.update({ //otherwise update the thread to have score field, use default state of 0
-            score: 0
-          })
+          if(threadDoc.exists) {
+            //try to set score using thread's score, will error if no score value set yet
+            updateScore(threadDoc.data().score) //set the score state
+          }
+          else {
+            console.log("This posts threadID points to a thread which no longer exists.")
+            let threadFound = false;
+            //find actual thread
+            db.collection("Threads").get().then((querySnapshot) => {
+              querySnapshot.forEach((queryDoc) => {
+                  // doc.data() is never undefined for query doc snapshots
+                  if(queryDoc.data().thread === doc.data().thread){
+                    threadFound = true;
+                    docRef.update({
+                      threadID: queryDoc.id
+                    })
+                    updateScore(queryDoc.data().score)
+                    console.log("Updated threadID to point to appropriate thread :: resolved")
+                  }
+                  //console.log(doc.id, " => ", doc.data().thread);
+              })
+              if(!threadFound){
+                console.log("Post has threadID which points to non-existent thread, and no approapriate thread could be found. - recommend deleting this point or creating a new thread.")
+              }
+            });
+          }
         })
       }
       else {

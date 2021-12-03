@@ -88,7 +88,7 @@ export default function Home(props) {
           source={require('../assets/favicon.png')}
         />
         <View>
-          <Text> {title} </Text>
+          <Text> {rest ? "" : "Total Score: " + item.score + " "}{title} </Text>
           {/* <Text> {item.description} </Text> */}
         </View> 
       </View>
