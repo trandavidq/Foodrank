@@ -124,7 +124,7 @@ export default function Home(props) {
     
     <SafeAreaView style = {{flex: 1, backgroundColor: '#F5FFFA'}}>
       <FlatList
-        data={data}
+        data={rest ? data : data.sort((a,b) => b.score - a.score)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
