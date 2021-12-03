@@ -6,7 +6,6 @@ import {loggingOut} from '../API/firebaseMethods';
 
 export default function Dashboard({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
-  const [bio,setBioState] = useState('')
   const [firstName, setFirstName] = useState('');
   useEffect(() => {
     async function getUserInfo(){
@@ -30,25 +29,7 @@ export default function Dashboard({ navigation }) {
     getUserInfo();
   })
 
-  async function setBio(){
-    console.log("bio: " + bio)
-    try {
-    const currentUser = firebase.auth().currentUser;
-    const db = firebase.firestore();
-    var userRef = db.collection("users")
-    .doc(currentUser.uid)
-    userRef
-    // .get().then((doc) => {
-    //   console.log("user doc: " + JSON.stringify(doc.data()))
-    // })
-    .update({
-      bio: bio
-    })
-
-  } catch(err){
-    Alert.alert("Issue getting user bio!!!!!",err.message)
-    }
-  }
+ 
 
   const handlePress = () => {
     loggingOut();
@@ -61,10 +42,6 @@ export default function Dashboard({ navigation }) {
       <Text style={styles.titleText}>Dashboard</Text>
       <View style={styles.container2}>
       <Text style={styles.text}>Hi {firstName}</Text>
-      <TextInput style={styles.textInput} value ={bio} onChangeText={setBioState} placeholder="Bio"/>
-      <TouchableOpacity style={styles.button} onPress={setBio}>
-        <Text style={styles.buttonText}>UpdateBio</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.logbutton} onPress={handlePress}>
         <Text style={styles.buttonText}>Log Out</Text>
       </TouchableOpacity>
