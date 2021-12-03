@@ -11,6 +11,7 @@ import * as firebase from 'firebase'
 import apiKeys from '../config/keys'
 import Upvote from '../Components/Upvote';
 import { ScrollView } from 'react-native-gesture-handler';
+import Comments from '../Components/Comments'
 
 if (!firebase.apps.length) {
   console.log('Connected with Firebase')
@@ -56,20 +57,19 @@ export default function ViewPost({navigation,route}) {
 
   //TODO Return post screen not as scroll view, but simply a single post page
   return (
-    <ScrollView>
-      <SafeAreaView>
-        <View style = {{width: '100%'}}>
-          <View style={styles.header}>
-            <View>
-              <Upvote params={{id: id, title: postData.title}} style={{justifyContent: "flex-start", flexDirection: "row"}}/>
-            </View>
-            <Text style={styles.title}> {postData.title} </Text>
+    <SafeAreaView>
+      <View style = {{width: '100%'}}>
+        <View style={styles.header}>
+          <View>
+            <Upvote params={{id: id, title: postData.title}} style={{justifyContent: "flex-start", flexDirection: "row"}}/>
           </View>
-          <Text style={styles.user}>{userData != null ? userData.name != "" ? "Post created by " + userData.name: "": ""}</Text>
-          <Text style={styles.description}> {postData.body} </Text>
+          <Text style={styles.title}> {postData.title} </Text>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+        <Text style={styles.user}>{userData != null ? userData.name != "" ? "Post created by " + userData.name: "": ""}</Text>
+        <Text style={styles.description}> {postData.body} </Text>
+      </View>
+      <Comments params={{id: id}}/>
+    </SafeAreaView>
   );
 
 }
