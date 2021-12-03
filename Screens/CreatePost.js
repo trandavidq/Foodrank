@@ -47,7 +47,7 @@ export default function Post({navigation: {navigate}}) {
       var newPost = dbh.collection('Posts').doc()
       newPost.set({
         title: title,
-        thread: thread,
+        thread: thread.trim(),
         restaurant: restaurant,
         body: body,
         user: firebase.auth().currentUser.uid, //note this is a random string, TODO: set user by accessing database to get name
@@ -57,7 +57,7 @@ export default function Post({navigation: {navigate}}) {
         title: title,
         thread: thread.trim(),
         restaurant: restaurant,
-        body: body, //note this is a random string, TODO: set user by accessing database to get name
+        body: body,
         votes: 0,
         postID: newPost.id
       })
@@ -65,7 +65,7 @@ export default function Post({navigation: {navigate}}) {
       dbh.collection("Threads").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            if(doc.data().thread === thread){
+            if(doc.data().thread === thread.trim()){
               threadFound = true;
               newPost.update({
                 threadID: doc.id
@@ -78,7 +78,7 @@ export default function Post({navigation: {navigate}}) {
           //TODO: Thread not found - submit for admin approval
           threadDoc = dbh.collection('Threads').doc()
           threadDoc.set({
-            thread: thread,
+            thread: thread.trim(),
             score: 0
           });
           newPost.update({
