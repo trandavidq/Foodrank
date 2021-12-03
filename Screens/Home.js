@@ -31,10 +31,8 @@ export default function Home(props) {
 
   React.useEffect(()=>{
     fetchData()
-  },[])
-  React.useEffect(() => {
     loadFonts()
-  }, [])
+  },[])
   // const [loaded] = useFonts({
   //   Montserrat: require('../assets/fonts/OpenSans.ttf'),
   // });
