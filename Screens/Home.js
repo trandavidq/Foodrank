@@ -14,6 +14,7 @@ import ListScreen from './List';
 import * as firebase from "firebase";
 import apiKeys from '../config/keys'
 import onSnapshot from "firebase/firestore"
+import * as Font from 'expo-font';
 
 const Stack = createStackNavigator();
 
@@ -24,14 +25,18 @@ if (!firebase.apps.length) {
 const dbh = firebase.firestore();
 
 
-
 export default function Home(props) {
   const [data, setData]= React.useState([])
   const [rest, setRest] = React.useState(false)
 
   React.useEffect(()=>{
     fetchData()
+    loadFonts()
   },[])
+  // const [loaded] = useFonts({
+  //   Montserrat: require('../assets/fonts/OpenSans.ttf'),
+  // });
+  
 
   async function fetchData() {
     //Use Firebase call in this function
@@ -130,8 +135,9 @@ export default function Home(props) {
           
           // source = {require('../assets/burger.jpg')}
         />
-        <View>
-          <Text> {rest ? "" : "Total Score: " + item.score + " "}{title} </Text>
+        <View style = {{flexDirection: 'row', display: 'inline-block'}}>
+          <Text style= {{fontSize: 16, fontWeight: 'bold', fontFamily: 'OpenSans', paddingLeft: 20}}>{title}</Text>
+          <Text style = {{fontSize: 16, fontWeight: 'bold', color: 'green',}}>{rest ? "" : ": "+item.score}</Text>
           {/* <Text> {item.description} </Text> */}
         </View> 
       </View>
@@ -150,16 +156,26 @@ export default function Home(props) {
     </SafeAreaView>
   );
 }
+async function loadFonts() {
+  await Font.loadAsync({
+    Berkshire: require('../assets/fonts/berkshire-swash.regular.ttf')
+  })  
+  await Font.loadAsync({
+    OpenSans: require('../assets/fonts/OpenSans-SemiBold.ttf')
+  })  
+}
 
 const styles = StyleSheet.create({
   item: {
+    fontSize: 15,
+    fontWeight: 'bold',
     padding: 2,
     marginVertical: 5,
     marginHorizontal: 5,
     width: '95%',
     backgroundColor: '#F0F8FF',
     flexDirection: "row", 
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     borderRadius: 4,
     shadowOffset: {
