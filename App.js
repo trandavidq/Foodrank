@@ -17,6 +17,7 @@ import SignUp from './Screens/SignUp';
 import SignIn from './Screens/SignIn';
 import LoadingScreen from './Screens/LoadingScreen';
 import Dashboard from './Screens/ProfileDashboard';
+import ProfileTabNav from './Screens/ProfileTabNav'
 
 
 // Initialize Firebase JS SDK
@@ -52,7 +53,7 @@ function HomeTab() {
 
       <Tab.Screen
         name="Profile"
-        component={Dashboard}
+        component={ProfileTabNav}
         options= {{
           title: 'FoodRank',
           tabBarLabel: 'Profile',

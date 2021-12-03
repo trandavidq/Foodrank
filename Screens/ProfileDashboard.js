@@ -3,6 +3,10 @@ import { View, Text, StyleSheet, Alert, TextInput} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 import {loggingOut} from '../API/firebaseMethods';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import ProfileTabNav from './HomeTabNavi'
+import Home from "./Home";
+const Tab = createMaterialTopTabNavigator();
 
 export default function Dashboard({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
