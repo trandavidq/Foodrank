@@ -16,14 +16,25 @@ const db = firebase.firestore()
 
 export default function Upvote({params}) {
   //setup state using hooks:
+
+  //post and thread scores
   const [votes, updateVotes] = useState(0)
+  const [score, updateScore] = useState(0)
+
+  //users like/dislike states:
   const [userLikes, updateLikes] = useState([])
   const [userDislikes, updateDislikes] = useState([])
+  const [liked, setLiked] = useState(false)
+  const [disliked, setDisliked] = useState(false)
+
+  //arrow states
   const [upIcon, setUpIcon] = useState("arrow-up-bold-outline")
   const [downIcon, setDownIcon] = useState("arrow-down-bold-outline")
+
+  //user states
   const [docPoster, updateDocPoster] = useState(null)
   const [thread, updateThread] = useState(null)
-  const [score, updateScore] = useState(0)
+
   useEffect( () => {
     fetchData()
   }, [])
@@ -34,32 +45,35 @@ export default function Upvote({params}) {
       if (doc.exists) { //post found
         updateVotes(doc.data().votes) //update post score
         updateDocPoster(doc.data().user) //update userID who made post
-        if(doc.data().threadID != undefined) { //if post has a threadID saved
-          updateThread(doc.data().threadID) //update thread ID
+        updateThread(doc.data().threadID) //update thread ID
 
-          var threadRef = db.collection("Threads").doc(""+doc.data().threadID)
-        }
-        else { //no threadID saved, need to find the appropriate thread
-          var threadRef = db.collection("Threads")
-          threadRef.get().then((querySnapshot) => {
-            querySnapshot.forEach((threadDoc) => {
-              if (threadDoc.data().thread === doc.data().thread) { //if thread found
-                updateThread(threadDoc.id) //update thread ID
-                docRef.update({ //save threadID to post
-                  threadID: threadDoc.id
-                })
-              }
-            })
-          })
-        }
+        var threadRef = db.collection("Threads").doc(""+doc.data().threadID)
         threadRef.get().then((threadDoc) => {
-          if (threadDoc.data().score != undefined) { //if thread has a score value
+          if(threadDoc.exists) {
+            //try to set score using thread's score, will error if no score value set yet
             updateScore(threadDoc.data().score) //set the score state
           }
           else {
-            threadRef.update({ //otherwise update the thread to have score field, use default state of 0
-              score: 0
-            })
+            console.log("This posts threadID points to a thread which no longer exists.")
+            let threadFound = false;
+            //find actual thread
+            db.collection("Threads").get().then((querySnapshot) => {
+              querySnapshot.forEach((queryDoc) => {
+                  // doc.data() is never undefined for query doc snapshots
+                  if(queryDoc.data().thread === doc.data().thread){
+                    threadFound = true;
+                    docRef.update({
+                      threadID: queryDoc.id
+                    })
+                    updateScore(queryDoc.data().score)
+                    console.log("Updated threadID to point to appropriate thread :: resolved")
+                  }
+                  //console.log(doc.id, " => ", doc.data().thread);
+              })
+              if(!threadFound){
+                console.log("Post has threadID which points to non-existent thread, and no approapriate thread could be found. - recommend deleting this point or creating a new thread.")
+              }
+            });
           }
         })
       }
@@ -69,31 +83,30 @@ export default function Upvote({params}) {
       }
     })
     var userDoc = db.collection("users").doc(''+firebase.auth().currentUser.uid)
-    userDoc.get().then( (doc) => {
-      if(doc.exists) {
-        //user exists in db
-        if(doc.data().likes != undefined) {
-          //user likes established
+    userDoc.get().then((doc) => {
+      if(doc.exists) { //user exists in db
+        try { //if user has likes field, make updates
           updateLikes(doc.data().likes)
           if(doc.data().likes.indexOf(params.id) != -1) {
             setUpIcon("arrow-up-bold")
+            setLiked(true)
           }
         }
-        else {
-          //setting up user likes
+        catch(e) { //user doesn't have likes field, need to update doc and use default state values
+          console.log(e)
           db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
             likes: []
           })
         }
-        if(doc.data().dislikes != undefined) {
-          //user dislikes established (load them)
+        try { //same thing with dislikes as with likes
           updateDislikes(doc.data().dislikes)
           if(doc.data().dislikes.indexOf(params.id) != -1) {
             setDownIcon("arrow-down-bold")
+            setDisliked(true)
           }
         }
-        else {
-          //setting up user dislikes in db
+        catch(e) {
+          console.log(e)
           db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
             dislikes: []
           })
@@ -105,153 +118,141 @@ export default function Upvote({params}) {
     })
   }
 
-  function buttonUp() {
-    var new_likes = userLikes
-    var new_dislikes = userDislikes
-    if(userLikes.indexOf(params.id) != -1) {
-      //the user has liked this already, is unliking
-      //TODO change image coloring to default
-      setUpIcon("arrow-up-bold-outline")
-      updateVotes(votes - 1)
-      db.collection("Posts").doc(''+params.id).update({
-        votes: votes - 1
-      })
-      updateScore(score - 1)
-      db.collection("Threads").doc(""+thread).update({
-        score: score - 1
-      })
-      if(docPoster == firebase.auth().currentUser.uid) {
-        db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
-          votes: votes - 1
-        })
-      }
+  //firebase.firestore.FieldValue.arrayUnion(""+params.id) :: add to user db
+  //firebase.firestore.FieldValue.arrayRemove(""+params.id) :: remove from user db
+
+  //.unshift(params.id) :: add to array
+  //.splice(userLikes.indexOf(params.id), 1) :: remove from array
+
+  function newButtonUp() {
+    var offset = 0
+    var dislikesChanged = false
+    var newLikes = userLikes
+    var newDislikes = userDislikes
+    if(liked) {
+      //if user already liked, need to unlike:
+      offset = -1
+      //remove likes from db
       db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
         likes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
       })
-      new_likes.splice(userLikes.indexOf(params.id), 1)
+      //update newLikes
+      newLikes.splice(userLikes.indexOf(params.id), 1)
     }
     else {
-      setUpIcon("arrow-up-bold")
-      //the user has not liked this already
-      if(userDislikes.indexOf(params.id) != -1) {
-        setDownIcon("arrow-down-bold-outline")
-        //user has disliked, and now is liking
-        updateVotes(votes + 2)
-        db.collection("Posts").doc(''+params.id).update({
-          votes: votes + 2
-        })
-        updateScore(score + 2)
-        db.collection("Threads").doc(""+thread).update({
-          score: score + 2
-        })
-        if(docPoster == firebase.auth().currentUser.uid) {
-          db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
-            votes: votes + 2
-          })
-        }
+      //user had not liked
+      if(disliked) {
+        //user had disliked, is now liking
+        offset = 2
+        //remove dislike and add like to db
         db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
           dislikes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
         })
-        new_dislikes.splice(userDislikes.indexOf(params.id), 1)
+        dislikesChanged = true
+        newDislikes.splice(userLikes.indexOf(params.id), 1)
       }
       else {
-        //user is liking, and has not disliked
-        updateVotes(votes + 1)
-        db.collection("Posts").doc(''+params.id).update({
-          votes: votes + 1
-        })
-        updateScore(score + 1)
-        db.collection("Threads").doc(""+thread).update({
-          score: score + 1
-        })
-        if(docPoster == firebase.auth().currentUser.uid) {
-          db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
-            votes: votes + 1
-          })
-        }
+        //user had not liked nor disliked, is now liking
+        offset = 1
       }
-      new_likes.unshift(params.id)
       db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
         likes: firebase.firestore.FieldValue.arrayUnion(""+params.id)
       })
+      newLikes.unshift(params.id)
     }
-    updateLikes(new_likes)
-    updateDislikes(new_dislikes)
+
+    updates(offset, true, dislikesChanged, newLikes, newDislikes)
   }
 
-  function buttonDown() {
-    var new_likes = userLikes
-    var new_dislikes = userDislikes
-    //user disliked
-    if(userDislikes.indexOf(params.id) != -1) {
-      setDownIcon("arrow-down-bold-outline")
-      //the user has disliked this already, is now un-disliking
-      //TODO change image coloring to default
-      updateVotes(votes + 1)
-      db.collection("Posts").doc(''+params.id).update({
-        votes: votes + 1
-      })
-      updateScore(score + 1)
-      db.collection("Threads").doc(""+thread).update({
-        score: score + 1
-      })
-      if(docPoster == firebase.auth().currentUser.uid) {
-        db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
-          votes: votes + 1
-        })
-      }
+  function newButtonDown() {
+    var offset = 0
+    var likesChanged = false
+    var newLikes = userLikes
+    var newDislikes = userDislikes
+    if(disliked) {
+      //if user already disliked, need to un-dislike:
+      offset = 1
+      //remove likes from db
       db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
         dislikes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
       })
-      new_dislikes.splice(userDislikes.indexOf(params.id), 1)
+      //update newLikes
+      newDislikes.splice(userLikes.indexOf(params.id), 1)
     }
     else {
-      setDownIcon("arrow-down-bold")
-      //the user has not disliked this already
-      if(userLikes.indexOf(params.id) != -1) {
-        setUpIcon("arrow-up-bold-outline")
-        //user has liked, and now is disliking
-        updateVotes(votes - 2)
-        db.collection("Posts").doc(''+params.id).update({
-          votes: votes - 2
-        })
-        updateScore(score - 2)
-        db.collection("Threads").doc(""+thread).update({
-          score: score - 2
-        })
-        if(docPoster == firebase.auth().currentUser.uid) {
-          db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
-            votes: votes - 2
-          })
-        }
+      //user had not liked
+      if(liked) {
+        //user had liked, is now disliking
+        offset = -2
+        //remove like
         db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
-          likes: firebase.firestore.FieldValue.arrayRemove(""+params.id)
+          like: firebase.firestore.FieldValue.arrayRemove(""+params.id)
         })
-        new_likes.splice(userLikes.indexOf(params.id), 1)
+        likesChanged = true
+        newLikes.splice(userLikes.indexOf(params.id), 1)
       }
       else {
-        //user is disliking, and has not liked
-        updateVotes(votes - 1)
-        db.collection("Posts").doc(''+params.id).update({
-          votes: votes - 1
-        })
-        updateScore(score - 1)
-        db.collection("Threads").doc(""+thread).update({
-          score: score - 1
-        })
-        if(docPoster == firebase.auth().currentUser.uid) {
-          db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
-            votes: votes - 1
-          })
-        }
+        //user had not liked nor disliked, is now liking
+        offset = -1
       }
-      new_dislikes.unshift(params.id)
+      //if user had already liked or not, either case need to add dislike to db and state
       db.collection("users").doc(''+firebase.auth().currentUser.uid).update({
         dislikes: firebase.firestore.FieldValue.arrayUnion(""+params.id)
       })
+      newDislikes.unshift(params.id)
     }
-    updateLikes(new_likes)
-    updateDislikes(new_dislikes)
+
+    updates(offset, likesChanged, true, newLikes, newDislikes)
+  }
+
+  function updates(offset, likesChanged, dislikesChanged, newLikes, newDislikes) {
+    updateStates(offset, likesChanged, dislikesChanged, newLikes, newDislikes)
+    updateDatabase(offset)
+  }
+
+  function updateStates(offset, likesChanged, dislikesChanged, newLikes, newDislikes) {
+    //update post and thread scores
+    updateVotes(votes + offset)
+    updateScore(score + offset)
+    if(likesChanged) {//if likes changed
+      //fill or unfill arrow and update list of likes and liked state
+      if(liked) {
+        setUpIcon("arrow-up-bold-outline")
+        setLiked(false)
+      }
+      else {
+        setUpIcon("arrow-up-bold")
+        setLiked(true)
+      }
+      updateLikes(newLikes)
+    }
+    if(dislikesChanged) {
+      if(disliked) {
+        setDownIcon("arrow-down-bold-outline")
+        setDisliked(false)
+      }
+      else {
+        setDownIcon("arrow-down-bold")
+        setDisliked(true)
+      }
+      updateDislikes(newDislikes)
+    }
+  }
+
+  function updateDatabase(offset) {
+    //update post and thread scores
+    db.collection("Posts").doc(''+params.id).update({
+      votes: votes + offset
+    })
+    db.collection("Threads").doc(""+thread).update({
+      score: score + offset
+    })
+    //update post score under user's collection
+    if(docPoster == firebase.auth().currentUser.uid) {
+      db.collection("users").doc(''+firebase.auth().currentUser.uid).collection("posts").doc(params.title).update({
+        votes: votes + offset
+      })
+    }
   }
 
   return (
@@ -260,14 +261,14 @@ export default function Upvote({params}) {
             <MaterialCommunityIcons 
               name={upIcon}
               size={30} color="green"
-              onPress={buttonUp}/>
+              onPress={newButtonUp}/>
             
             <Text>{votes}</Text>
 
             <MaterialCommunityIcons 
               name={downIcon}
               size={30} color="red"
-              onPress={buttonDown}/>
+              onPress={newButtonDown}/>
         </View>
       </View>
   );

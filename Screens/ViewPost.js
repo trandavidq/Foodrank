@@ -22,6 +22,7 @@ export default function ViewPost({navigation,route}) {
   const [postData, setPostData] = React.useState([])
   const [userData, setUserData] = React.useState(null)
   const [validUser, setValidUser] = React.useState(false)
+  
   React.useEffect(()=>{
     fetchData()
   },[])

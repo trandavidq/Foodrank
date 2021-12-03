@@ -21,7 +21,6 @@ if (!firebase.apps.length) {
 }
 const db = firebase.firestore();
 
-
 export default function List({navigation, route}) {
   const [data, setPostData] = React.useState([])
   const id = route.params.id;
@@ -29,13 +28,14 @@ export default function List({navigation, route}) {
   React.useEffect(()=>{
     fetchData()
   },[])
+
   //Filter by thread
   async function fetchData() {
     if(route.params.type == "thread") {
-      var ref = db.collection('Posts').where("thread","==",id)
+      var ref = db.collection('Posts').where("thread", "==", route.params.id)
     }
-    else if(route.params.type == "user") {
-      var ref = db.collection("users").doc(""+route.params.id).collection("posts")
+    else if(route.params.type == "restaurant") {
+      var ref = db.collection("Posts").where("restaurant", "==", route.params.id)
     }
     else {
       console.log("ERROR: Incorrect type paramter")
