@@ -72,6 +72,7 @@ export default function Upvote({params}) {
               })
               if(!threadFound){
                 console.log("Post has threadID which points to non-existent thread, and no approapriate thread could be found. - recommend deleting this point or creating a new thread.")
+                console.log("Title: " + doc.data().title)
               }
             });
           }
