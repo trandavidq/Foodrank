@@ -33,7 +33,7 @@ function HomeTab() {
           component={StackNavHolder}
           options={{
             title: 'FoodRank',
-            tabBarLabel: 'Categories',
+            tabBarLabel: 'Home',
             tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="home" color={color} size={26} />
             )
