@@ -40,11 +40,9 @@ export default function Home(props) {
       var ref = await dbh.collection('Restaurants')
       setRest(true)
       isRest = true
-      console.log("Restaurants list")
     }
     else { //else its "Home", list threads
       var ref = await dbh.collection('Threads')
-      console.log("Thread list")
     }
     ref.onSnapshot((querySnapshot) => {
       var data = [];
